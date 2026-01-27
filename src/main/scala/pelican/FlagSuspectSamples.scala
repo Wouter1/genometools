@@ -46,7 +46,7 @@ object FlagSuspectSamples extends Main {
     }
 
   }
-  def run(config: Config) {
+  def run(config: Config): Unit = {
 
     val amb = tMap(tLines(config.ambiguous))
     val cov = tMap(tLines(config.pilonMetrics))
@@ -118,7 +118,7 @@ object FlagSuspectSamples extends Main {
     tuples.filter(_._7 < config.threshold).map(f => printTuple(pw, f))
     tuples.filter(_._7 < config.threshold).map(f => printTuple(pw3, f))
 
-    def printTuple(pwx: PrintWriter, tuple: (String, Double, Double, Double, Int, String, Double)) {
+    def printTuple(pwx: PrintWriter, tuple: (String, Double, Double, Double, Int, String, Double)) : Unit = {
       val (key, ambRate, lsRate, liRate, covV, contaminant, suspicionScore) = tuple
       pwx.println(key + "\t" + key + "\t" + nf.format(ambRate) + "\t" + nf.format(liRate) + "\t" + nf.format(lsRate) + "\t" + covV + "\t" + contaminant + "\t" + nf.format(suspicionScore))
     }

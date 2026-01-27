@@ -32,13 +32,13 @@ import abeel.genometools.gfa.FastGFAStatistics
 import pelican._
 
 trait Main extends Tool {
-  def main(args: Array[String]) {}
+  def main(args: Array[String]): Unit = {}
 
 }
 
 object GenomeToolsConsole extends Tool {
 
-  def getDeclaredFields(cc: AnyRef) = {
+  def getDeclaredFields(cc: AnyRef) : Unit = {
     val m = (Map[String, Any]() /: cc.getClass.getDeclaredFields) { (a, f) =>
       f.setAccessible(true)
       a + (f.getName -> f.get(cc))
@@ -124,7 +124,7 @@ object GenomeToolsConsole extends Tool {
 
   }
 
-  def listInstructions() {
+  def listInstructions(): Unit= {
     println("Usage:java -jar genometools.jar <instruction> [options...]")
     println("Instructions:")
     println(instructions.toList.sortBy(_._1).map(f => String.format("    %1$-20s", f._1) + f._2.description).mkString("\n"))

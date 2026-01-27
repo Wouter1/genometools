@@ -22,7 +22,7 @@ object GFF2GTF extends Main{
 	 * @throws IOException
 	 * @throws ReadFailedException
 	 */
-	override def  main(args:Array[String]){
+	override def  main(args:Array[String]): Unit = {
 		if (args.length != 2) {
 			System.out.println("##----------------------------------------------");
 			System.out.println("## GFF2GTF.java");

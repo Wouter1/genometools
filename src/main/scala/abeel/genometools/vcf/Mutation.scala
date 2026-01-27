@@ -36,7 +36,7 @@ object Mutation {
     }
     
   }
-  implicit def seqtoBool(s: String) = new Line(s)
+  implicit def seqtoBool(s: String):Line = new Line(s)
 
   case class SNP(val ref: String, val coordination: Int, val alt: String,val chr:String) extends Mutation {//} with Ordered[SNP] {
     override def toString(): String = ref + coordination + alt+chr

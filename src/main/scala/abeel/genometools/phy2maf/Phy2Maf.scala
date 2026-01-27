@@ -10,7 +10,7 @@ object Phy2Maf extends Main {
   
   case class Config(val inputFile: File = null, val outputFile: File = null, val n:Int=80)
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar phy2maf") {
       opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input phylip formatted file.")

@@ -30,7 +30,7 @@ object TDF2GCbias extends Main {
     2016/10/05       Initial version included in genometools
    """
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
  setDebugLevel(Level.WARNING)
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar tdf2gcbias") {
       val default = new Config()
@@ -50,7 +50,7 @@ object TDF2GCbias extends Main {
     }
   }
 
-  private def processFile(config: Config) {
+  private def processFile(config: Config): Unit = {
 
     val ref = DataSourceFactory.create(new Locator(config.reference)).read();
     val tdf = DataSourceFactory.create(new Locator(config.input)).read();

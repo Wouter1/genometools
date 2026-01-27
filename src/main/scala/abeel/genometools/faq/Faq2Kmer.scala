@@ -24,7 +24,7 @@ object Faq2Kmer extends Main {
     2016/09/12       Initial version included in genometools
    """
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
    
 
@@ -45,7 +45,7 @@ object Faq2Kmer extends Main {
     }
   }
 
-  private def processFile(config: Config) {
+  private def processFile(config: Config): Unit = {
 
     val kmerIt = if (config.fastq)
       FastQFile(config.inputFile).map(fr => fr.seq).map(seq => seq.sliding(config.kmer))

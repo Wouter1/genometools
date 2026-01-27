@@ -13,7 +13,7 @@ object Bam2ReadNames extends Tool with Main {
 
   case class Config(val inputFile: File = null, val outputFile: File = null)
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
     println("##----------------------------------------------")
     println("## Bam2ReadNames.scala")
@@ -53,7 +53,7 @@ object Bam2ReadNames extends Tool with Main {
     }
   }
 
-  private def processFile(config: Config) {
+  private def processFile(config: Config): Unit = {
 
     
 

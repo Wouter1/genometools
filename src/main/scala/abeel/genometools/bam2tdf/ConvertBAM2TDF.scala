@@ -36,7 +36,7 @@ import abeel.genometools.Main
 object ConvertBAM2TDF extends Tool with Main{
   case class Config(val mappingQuality: Int = -1, files: Seq[File] = Seq())
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]) : Unit = {
 
     println("##----------------------------------------------")
     println("## ConvertBAM2TDF.scala")
@@ -92,7 +92,7 @@ object ConvertBAM2TDF extends Tool with Main{
 
   }
 
-  private def printUsage() {
+  private def printUsage() : Unit = {
     System.out.println("Usage: java -jar bam2tdf.jar <bam file 1> [<bam file 2> ...]");
     System.out.println("\tbam2tdf needs a BAI file for each BAM file.");
 

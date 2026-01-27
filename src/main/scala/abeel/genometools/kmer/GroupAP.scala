@@ -18,7 +18,7 @@ object GroupAP extends Main {
     2016/09/28       Initial version included in genometools
    """
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar groupprofile") {
 
@@ -37,7 +37,7 @@ object GroupAP extends Main {
 
   }
 
-  private def processFile(config: Config) {
+  private def processFile(config: Config): Unit = {
 
     val it = tLinesIterator(config.input)
     val files = it.next()

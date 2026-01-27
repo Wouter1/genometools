@@ -23,7 +23,7 @@ object PilonMetrics extends Main {
 
   }
 
-  private def extract(in: File, out: File) {
+  private def extract(in: File, out: File): Unit = {
     val map = tMap(tLines(in))
     val metrics = map.mapValues(_.replaceAll("pilon.vcf", "pilon.metrics"))
     val pw = new PrintWriter(out)

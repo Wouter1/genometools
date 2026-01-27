@@ -25,7 +25,7 @@ object ReduceVCF extends Tool with Main {
     var keep: Boolean = false;
   }
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
     println("##----------------------------------------------")
     println("## ReduceVCF.scala")
@@ -53,8 +53,8 @@ object ReduceVCF extends Tool with Main {
 
     val config = new Config();
     val parser = new scopt.OptionParser[Unit]("Reducer") {
-      opt[File]('i', "input") required() valueName("<file>") text("Input file") foreach({ v: File => config.inputfile = v })
-      opt[File]('o', "output") required() valueName("<file>") text("Output file") foreach({ v: File => config.outputfile = v })
+      opt[File]('i', "input") required() valueName("<file>") text("Input file") foreach((v: File) => config.inputfile = v )
+      opt[File]('o', "output") required() valueName("<file>") text("Output file") foreach({ (v: File) => config.outputfile = v })
       opt[Unit]('k', "keep") text("Keep all non-reference calls, i.e. non-reference calls without the PASS flag.") foreach({ _ => config.keep = true })
       // arglist("<file>...", "arglist allows variable number of arguments",
       //   { v: String => config.files = (v :: config.files).reverse })

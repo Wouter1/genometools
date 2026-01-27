@@ -19,7 +19,7 @@ object ReduceKmer extends Main {
     2016/09/27       Initial version included in genometools
    """
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
  
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar reducekmer") {
       opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input BAM file. ")
@@ -37,7 +37,7 @@ object ReduceKmer extends Main {
     }
   }
 
-  private def processFile(config: Config) {
+  private def processFile(config: Config): Unit = {
 
     val pw = new PrintWriter(config.outputFile)
     pw.println(generatorInfo(config))

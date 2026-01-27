@@ -24,7 +24,7 @@ object FaqStats extends Main {
     2016/09/12       Initial version included in genometools
    """
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
    
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar faqstats") {
@@ -43,7 +43,7 @@ object FaqStats extends Main {
     }
   }
 
-  private def processFile(config: Config) {
+  private def processFile(config: Config): Unit = {
 
     val seqIt =
       if (config.fastq) {

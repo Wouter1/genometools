@@ -39,7 +39,7 @@ object ConservedRegions extends Main {
     }
   }
 
-  private def group(config: Config) {
+  private def group(config: Config): Unit = {
 
     val list = tLines(config.input).map(new File(_))
 

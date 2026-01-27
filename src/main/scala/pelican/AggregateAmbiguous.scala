@@ -14,7 +14,8 @@ object AggregateAmbiguous extends Main {
   
   override def description = """Aggregate ambiguity information from VCF files"""
   case class Config(val input: File = null, val outputPrefix: String = "ambiguity")
-  override def main(args: Array[String]) {
+  
+  override def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar ambiguous") {
       opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("Folder with VCF files to scan") //, { v: String => config.spacerFile = v })
       opt[String]('o', "output") action { (x, c) => c.copy(outputPrefix = x) } text ("Output prefix")
@@ -28,7 +29,7 @@ object AggregateAmbiguous extends Main {
 
   }
   val defaultPattern = ".*.annotated.vcf"
-  def process(config: Config) {
+  def process(config: Config): Unit = {
 
    
     val pw = new PrintWriter(config.outputPrefix + ".summary.txt")

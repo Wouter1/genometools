@@ -52,7 +52,7 @@ override def description = """Merge several projects together."""
     }
   }
 
-  private def merge(config: Config) {
+  private def merge(config: Config): Unit = {
     val lines = tLines(config.input)
     config.output.mkdirs()
     /**

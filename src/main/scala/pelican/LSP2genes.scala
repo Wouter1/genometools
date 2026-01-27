@@ -45,7 +45,8 @@ object LSP2genes extends Main {
   }
 
   case class Config(val id:String="ID",gff: File = null, includList: File = null, vcfDirectory: File = null, output: String = null,val typ:String="gene")
-  def lsp2genes(config: Config) {
+  
+  def lsp2genes(config: Config): Unit = {
     val genes = (tLines(config.gff).map(new GFFLine(_)).filter(_.`type`.equalsIgnoreCase(config.typ))).par
     println("Genes included in analysis: "+genes.size)
     val includeList = tLines(config.includList)//.map(GNumbers.singleG(_))

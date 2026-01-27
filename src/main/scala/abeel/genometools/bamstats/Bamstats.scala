@@ -20,7 +20,7 @@ object Bamstats extends Main {
     2014/12/22       Initial version
    """
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]) : Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar bamstats") {
       opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input file")
@@ -37,7 +37,7 @@ object Bamstats extends Main {
     }
   }
 
-  private def processFile(config: Config) {
+  private def processFile(config: Config): Unit = {
 
     val sam = new SAMFileReader(config.inputFile)
 

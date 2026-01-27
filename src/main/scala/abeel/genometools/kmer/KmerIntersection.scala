@@ -18,7 +18,7 @@ object KmerIntersection extends Main {
     2016/09/27       Initial version included in genometools
    """
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar intersect-kmer") {
       //      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input BAM file. ")
@@ -38,7 +38,7 @@ object KmerIntersection extends Main {
 
   }
 
-  def processFile(config: Config) {
+  def processFile(config: Config): Unit = {
 
     val map = scala.collection.mutable.Map[Long, Int]().withDefaultValue(0)
     var hashSize = 0

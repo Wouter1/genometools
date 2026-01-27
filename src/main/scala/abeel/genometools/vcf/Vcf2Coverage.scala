@@ -19,7 +19,7 @@ object Vcf2Coverage extends Main {
 
   case class Config(val vcfFile: File = null, val outputFile: File = null, val window: Int = 1000)
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]) :Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar vcf2coverage") {
       opt[File]('i', "input") required () action { (x, c) => c.copy(vcfFile = x) } text ("VCF file")

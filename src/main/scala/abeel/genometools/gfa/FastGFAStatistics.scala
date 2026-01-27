@@ -22,7 +22,7 @@ This tool is still in development and is not for general use.
 
   case class Config(val inputFile: File = null, val outputFile: File = null)
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar gfa-fast-statistics") {
       opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input GFA formatted file.")

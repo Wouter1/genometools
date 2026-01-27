@@ -20,7 +20,7 @@ object Bam2Kmer extends Main{
     2016/11/04       Initial version included in genometools
    """
   
-  override def main(args: Array[String]) {  
+  override def main(args: Array[String]):Unit =  {  
   
     val parser = new scopt.OptionParser[Config]("java -jar mypack.jar thekmers") {
       opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input BAM file. ")
@@ -41,30 +41,30 @@ object Bam2Kmer extends Main{
  
 
     
-    private def processFile(config: Config) {
+    private def processFile(config: Config):Unit =  {
       val sfr = new SAMFileReader(config.inputFile)
       sfr.setValidationStringency(ValidationStringency.LENIENT)
       val map = scala.collection.mutable.Map[Long, Int]().withDefaultValue(0)
       
       var counter = 0 
       var discard = 0 
-  	  val startTime = System.currentTimeMillis() 
+      val startTime = System.currentTimeMillis() 
   	  
-  	  var unmapped = 0
+      var unmapped = 0
   	  
-  	  var skipped = 0 // going to count how many was skipped
-  	  val r = scala.util.Random // going to randomly choose which to skip
+      var skipped = 0 // going to count how many was skipped
+      val r = scala.util.Random // going to randomly choose which to skip
       val genlength = sfr.getFileHeader().getSequenceDictionary().getReferenceLength()
       var readlengths = 0 // will hold the readlengths to calculate average
       
   	  // iterationg through the reads in the bam file
   	
-  	  val fileiter = sfr.iterator() // gets the iterative version of the bam file
+      val fileiter = sfr.iterator() // gets the iterative version of the bam file
  
-  	  var howmany = 0 // total reads
+      var howmany = 0 // total reads
     
   	  
-  	  while (fileiter.hasNext()) { // will only run till stops
+     while (fileiter.hasNext()) { // will only run till stops
         howmany += 1
      
         if (howmany % 10000 == 0) {
@@ -98,7 +98,7 @@ object Bam2Kmer extends Main{
             }
           }
         }
-  	  }
+      }
       
       counter = counter - discard
       

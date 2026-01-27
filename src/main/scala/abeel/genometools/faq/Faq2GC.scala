@@ -25,7 +25,7 @@ object Faq2GC extends Main {
     2016/10/04       Initial version included in genometools
    """
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar faq2gc") {
       opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input file. By default FASTA formatted. If you have a FASTQ, use the --fq flag")
@@ -44,7 +44,7 @@ object Faq2GC extends Main {
     }
   }
 
-  private def processFile(config: Config) {
+  private def processFile(config: Config): Unit = {
 
     val gcIt = if (config.fastq)
       FastQFile(config.inputFile).map(fr => fr.seq).map(seq => seq.grouped(config.window))

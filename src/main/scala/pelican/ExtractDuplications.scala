@@ -22,7 +22,7 @@ object ExtractDuplications extends Main {
       extract(config);
     }
   }
-  def extract(config: Config) {
+  def extract(config: Config): Unit = {
 
     val files = tLines(config.input).map(s => s.split("\t")(1).replaceAll("pilon.vcf", "pilon.log"))
     println(files)

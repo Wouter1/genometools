@@ -26,7 +26,7 @@ object Nwk2Nodes extends Main {
     }
   }
 
-  def replace(config: Config) {
+  def replace(config: Config): Unit = {
 
     val pw = new PrintWriter(config.output)
     pw.println(generatorInfo(config))

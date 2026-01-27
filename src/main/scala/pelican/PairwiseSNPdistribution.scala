@@ -38,7 +38,7 @@ object PairwiseSNPdistribution extends Main {
 
   }
 
-  private def run(config: Config) {
+  private def run(config: Config): Unit = {
 
     val map = tMap(tLines(config.input).drop(1))
 

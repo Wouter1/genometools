@@ -10,7 +10,7 @@ object InjectColumns extends Tool with Main{
 
   case class Config(val inputFile: File = null, val outputFile: File = null, files: List[File] = List())
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
     println("##----------------------------------------------")
     println("## InjectColumns.scala")
@@ -57,7 +57,7 @@ object InjectColumns extends Tool with Main{
     }
   }
   
-  private def processFile(config:Config){
+  private def processFile(config:Config): Unit ={
     
     
     var content=tLines(config.inputFile,false,false).mkString("\n")

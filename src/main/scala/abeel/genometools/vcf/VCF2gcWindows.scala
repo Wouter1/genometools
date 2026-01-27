@@ -76,7 +76,7 @@ object VCF2gcWindows extends Main {
           //          assume(atCount + gcCount == xx.size)
 
           if(atCount + gcCount == config.window || config.incomplete)
-        	  pw.println(gcRate + "\t" + (dp.sum / dp.size.toDouble) + "\t" + at.size + "\t" + gc.size + "\t" + (at.size + gc.size) + "\t" + dp.size)
+             pw.println(gcRate + "\t" + (dp.sum / dp.size.toDouble) + "\t" + at.size + "\t" + gc.size + "\t" + (at.size + gc.size) + "\t" + dp.size)
         }
       }
       

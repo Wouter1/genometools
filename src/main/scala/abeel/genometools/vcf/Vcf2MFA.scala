@@ -15,7 +15,7 @@ object Vcf2MFA extends Main {
 
   case class Config(val vcfPathFile: File = null, val output: File = null, val mq:Int=0)
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]):Unit =  {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar vcf2mfa") {
       opt[File]('i', "input") required () action { (x, c) => c.copy(vcfPathFile = x) } text ("VCF path file")

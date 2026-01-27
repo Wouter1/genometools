@@ -27,7 +27,7 @@ object PairwiseSNPdistance extends Main {
     }
 
   }
-  def run(config: Config) {
+  def run(config: Config): Unit = {
     FastaParser.forceEntries = true
     val es = new FileSource(config.input).read()
     val pw = new PrintWriter(config.output)

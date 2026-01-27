@@ -25,7 +25,7 @@ object Kmer2AP extends Main {
     2016/09/27       Initial version included in genometools
    """
 
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar kmer2matrix") {
 
@@ -44,7 +44,7 @@ object Kmer2AP extends Main {
 
   }
 
-  def processFile(config: Config) {
+  def processFile(config: Config): Unit = {
 
     var hashSize = 0
     val indexedStrains = tLines(config.input).zipWithIndex

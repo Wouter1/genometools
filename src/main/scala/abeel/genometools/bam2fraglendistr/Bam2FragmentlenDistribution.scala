@@ -20,7 +20,7 @@ object Bam2FragmentlenDistribution extends Main {
     2014/12/22       Initial version included in genometools, prior version were stand-alone
    """
     
-  override def main(args: Array[String]) {
+  override def main(args: Array[String]): Unit= {
 
     try {
       val prop = new Properties();
@@ -48,7 +48,7 @@ object Bam2FragmentlenDistribution extends Main {
     }
   }
 
-  private def processFile(config: Config) {
+  private def processFile(config: Config): Unit =  {
 
     val sam = new SAMFileReader(config.inputFile)
 
