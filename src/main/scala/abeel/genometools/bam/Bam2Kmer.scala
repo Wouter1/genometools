@@ -3,13 +3,13 @@ package abeel.genometools.bam
 import java.io.File
 import net.sf.samtools.SAMFileReader
 import atk.compbio.DNAString
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import java.io.PrintWriter
 import abeel.genometools.Main
 import net.sf.samtools.SAMFileReader.ValidationStringency
 import atk.util.TimeInterval
 import atk.compbio.DNAHash
-import java.util.Formatter.DateTime
+//import java.util.Formatter.DateTime
 import java.time.LocalDateTime
 
 object Bam2Kmer extends Main{
@@ -23,10 +23,10 @@ object Bam2Kmer extends Main{
   override def main(args: Array[String]):Unit =  {  
   
     val parser = new scopt.OptionParser[Config]("java -jar mypack.jar thekmers") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input BAM file. ")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
-      opt[Int]('k', "kmer") action { (x, c) => c.copy(kmer = x) } text ("Kmer length, default = " + new Config().kmer)
-      opt[Double]('p', "random") action { (x, c) => c.copy(random = x) } text ("Random value of reads you want processed, default = " + new Config().random)
+      opt[File]('i', "input").required().action { (x, c) => c.copy(inputFile = x) }.text ("Input BAM file. ")
+      opt[File]('o', "output").required().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
+      opt[Int]('k', "kmer").action{ (x, c) => c.copy(kmer = x) }.text("Kmer length, default = " + new Config().kmer)
+      opt[Double]('p', "random").action{ (x, c) => c.copy(random = x) }.text ("Random value of reads you want processed, default = " + new Config().random)
 
     }
     parser.parse(args, Config()) map { config =>
@@ -64,7 +64,7 @@ object Bam2Kmer extends Main{
       var howmany = 0 // total reads
     
   	  
-     while (fileiter.hasNext()) { // will only run till stops
+      while (fileiter.hasNext()) { // will only run till stops
         howmany += 1
      
         if (howmany % 10000 == 0) {

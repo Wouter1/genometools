@@ -5,7 +5,7 @@ import be.abeel.util.CountMap
 import atk.compbio.vcf.VCFLine
 import be.abeel.util.FrequencyMap
 import java.io.File
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import java.io.PrintWriter
 import atk.io.PatternFileFilter
 import abeel.genometools.Main

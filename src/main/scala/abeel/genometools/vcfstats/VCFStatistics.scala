@@ -6,8 +6,9 @@ import atk.util.Tool
 import atk.compbio.vcf.VCFFile
 import be.abeel.util.CountMap
 import atk.compbio.vcf.VCFFile
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import abeel.genometools.Main
+
 object VCFStatistics extends Tool with Main {
   case class Config(val input: File = null, val output: File = null)
 

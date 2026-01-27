@@ -5,7 +5,7 @@ import abeel.genometools.Main
 import atk.util.NaturalOrderComparator
 import net.sf.jannot.source.FileSource
 import net.sf.jannot.parser.FastaParser
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import java.io.PrintWriter
 
 object MFA extends Main {

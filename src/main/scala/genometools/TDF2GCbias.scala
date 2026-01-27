@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import atk.compbio.DNAHash
 import net.sf.samtools.SAMFileReader.ValidationStringency
 import atk.util.TimeInterval
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import net.sf.jannot.tdf.TDFDataSource
 import net.sf.jannot.source.Locator
 import net.sf.jannot.source.DataSourceFactory

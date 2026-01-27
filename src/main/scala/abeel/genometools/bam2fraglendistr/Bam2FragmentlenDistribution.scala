@@ -4,7 +4,7 @@ import java.util.Properties
 import java.io.File
 import atk.util.Tool
 import net.sf.samtools.SAMFileReader
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import be.abeel.util.FrequencyMap
 import be.abeel.util.FrequencyMapUtils
 import abeel.genometools.Main
@@ -34,8 +34,8 @@ object Bam2FragmentlenDistribution extends Main {
     }
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar bam2fraglendistr") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input file in which to inject data") //, { v: String => config.spacerFile = v })
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
+      opt[File]('i', "input").required().action{ (x, c) => c.copy(inputFile = x) }.text ("Input file in which to inject data") //, { v: String => config.spacerFile = v })
+      opt[File]('o', "output").required().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -54,13 +54,20 @@ object Bam2FragmentlenDistribution extends Main {
 
     val fm = new FrequencyMap
 
-    val filtered = sam.iterator().filter(f => f.getFirstOfPairFlag() && !f.getMateUnmappedFlag() && f.getReferenceIndex() == f.getMateReferenceIndex() && f.getMappingQuality() > 0)
-    while (filtered.hasNext) {
-      val sr = filtered.next
-      val s = sr.getAlignmentStart()
-      val e = sr.getMateAlignmentStart()
-      val diff = math.abs(e - s) + sr.getReadLength()
-      fm.count(diff)
+    //val filtered = sam.iterator().filter(f => f.getFirstOfPairFlag() && !f.getMateUnmappedFlag() && f.getReferenceIndex() == f.getMateReferenceIndex() && f.getMappingQuality() > 0)
+    //while (filtered.hasNext) {
+    
+    val iter = sam.iterator()
+    while (iter.hasNext) {
+      val sr = iter.next
+      if (sr.getFirstOfPairFlag() && !sr.getMateUnmappedFlag() 
+          && sr.getReferenceIndex() == sr.getMateReferenceIndex() 
+          && sr.getMappingQuality() > 0) {
+        val s = sr.getAlignmentStart()
+        val e = sr.getMateAlignmentStart()
+        val diff = math.abs(e - s) + sr.getReadLength()
+        fm.count(diff)
+      }
     }
     FrequencyMapUtils.plot(fm, config.outputFile.toString(), false, 0, 2000)
 

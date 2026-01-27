@@ -7,7 +7,7 @@ import atk.util.Tool
 import abeel.genometools.vcf.Mutation._
 import abeel.genometools.Main
 import atk.compbio.vcf.VCFFile
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import be.abeel.util.CountMap
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
 import atk.io.NixWriter

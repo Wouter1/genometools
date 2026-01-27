@@ -3,7 +3,7 @@ package pelican
 import net.sf.jannot.source.DataSource
 import net.sf.jannot.source.FileSource
 import java.io.File
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import net.sf.jannot.parser.FastaParser
 import java.io.PrintWriter
 import atk.util.Tool

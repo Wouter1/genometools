@@ -7,7 +7,7 @@ import abeel.genometools.Main
 import abeel.genometools.GenomeToolsConsole
 import atk.io.ExtensionFileFilter
 import atk.compbio.vcf.VCFFile
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import atk.util.NaturalOrderComparator
 
 object VCF2mutationMatrix extends Main {

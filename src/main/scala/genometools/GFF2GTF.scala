@@ -1,7 +1,7 @@
 package abeel.genometools.gff2gtf;
 
 import java.io.FileOutputStream
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import java.io.IOException
 import net.sf.jannot.Entry
 import net.sf.jannot.EntrySet

@@ -4,7 +4,7 @@ import java.util.Properties
 import java.io.File
 import atk.util.Tool
 import net.sf.samtools.SAMFileReader
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import be.abeel.util.FrequencyMap
 import be.abeel.util.FrequencyMapUtils
 import abeel.genometools.Main

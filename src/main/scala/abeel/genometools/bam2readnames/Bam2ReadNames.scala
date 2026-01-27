@@ -5,7 +5,7 @@ import java.io.File
 import atk.util.Tool
 import java.io.PrintWriter
 import net.sf.samtools.SAMFileReader
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import abeel.genometools.Main
 
 
@@ -39,8 +39,8 @@ object Bam2ReadNames extends Tool with Main {
     }
 
     val parser = new scopt.OptionParser[Config]("java -jar bam2readnames.jar") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input file in which to inject data") //, { v: String => config.spacerFile = v })
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
+      opt[File]('i', "input").required().action { (x, c) => c.copy(inputFile = x) }.text ("Input file in which to inject data") //, { v: String => config.spacerFile = v })
+      opt[File]('o', "output").required().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -61,8 +61,14 @@ object Bam2ReadNames extends Tool with Main {
 
     val pw = new PrintWriter(config.outputFile)
 
-    val names = sam.iterator().map(f => pw.println(f.getReadName()))
-    while (names.hasNext) names.next
+    val iter = sam.iterator()
+	
+    //val names = sam.iterator().map(f => pw.println(f.getReadName()))
+    //while (names.hasNext) names.next
+
+    while (iter.hasNext) {
+      pw.println(iter.next.getReadName())
+    }
 
     pw.close
     sam.close()

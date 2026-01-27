@@ -114,7 +114,7 @@ object GenomeToolsConsole extends Tool {
 
     if (args.length == 0 || !instructions.contains(args(0))) {
 
-      listInstructions
+      listInstructions()
     } else {
       val name = args(0)
       val obj: Main = instructions(name)

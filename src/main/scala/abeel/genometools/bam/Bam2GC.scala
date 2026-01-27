@@ -5,7 +5,7 @@ import java.io.File
 import net.sf.samtools.SAMFileReader
 import net.sf.samtools.SAMFileReader.ValidationStringency
 import atk.compbio.DNAHash
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import atk.io.NixWriter
 
 object Bam2GC extends Main {
@@ -21,8 +21,8 @@ object Bam2GC extends Main {
   override def main(args: Array[String]):Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar bam2gc") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input BAM file. ")
-      opt[File]('o', "output") action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
+      opt[File]('i', "input").required().action { (x, c) => c.copy(inputFile = x) }.text ("Input BAM file. ")
+      opt[File]('o', "output").action{ (x, c) => c.copy(outputFile = x) }.text("File where you want the output to be written")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -55,7 +55,11 @@ object Bam2GC extends Main {
     val map = scala.collection.mutable.Map[Long, Int]().withDefaultValue(0)
     var discard = 0
     var counter = 0
-    for (samRecord <- sfr.iterator()) {
+    
+    val iter = sfr.iterator()
+    //for (samRecord <- sfr.iterator()) { // "implicit extension is ambiguous"
+    while (iter.hasNext) {
+      val samRecord = iter.next
       progress(100000)
       counter += 1
 
@@ -73,7 +77,7 @@ object Bam2GC extends Main {
 
     }
 
-    val pw = if(config.outputFile!=null) new NixWriter(config.outputFile, config) else new NixWriter(config.inputFile+".gc",config)
+    val pw = if(config.outputFile!=null) new NixWriter(config.outputFile, config) else new NixWriter(""+config.inputFile+".gc",config)
     pw.println("# Processed reads = " + counter)
     pw.println("# Included reads =" + (counter - discard))
     pw.println("# Discarded reads = " + discard)

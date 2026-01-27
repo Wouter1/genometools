@@ -24,7 +24,7 @@ import java.util.ArrayList
 import net.sf.samtools.SAMFileReader
 import net.sf.samtools.SAMFileReader.ValidationStringency
 import atk.util.Tool
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import abeel.genometools.Main
 
 /**
@@ -59,10 +59,10 @@ object ConvertBAM2TDF extends Tool with Main{
     }
 
     val parser = new scopt.OptionParser[Config]("java -jar bam2tdf.jar") {
-      opt[Int]('m', "mappingQuality") action { (x, c) => c.copy(mappingQuality = x) } text ("Minimum mapping quality for reads to be include in the coverage calculation.") //, { v: String => config.spacerFile = v })
-      arg[File]("<file>...") unbounded () required () action { (x, c) =>
+      opt[Int]('m', "mappingQuality").action { (x, c) => c.copy(mappingQuality = x) }.text ("Minimum mapping quality for reads to be include in the coverage calculation.") //, { v: String => config.spacerFile = v })
+      arg[File]("<file>...").unbounded().required().action { (x, c) =>
         c.copy(files = c.files :+ x)
-      } text ("files to convert to TDF")
+      }.text ("files to convert to TDF")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -76,7 +76,7 @@ object ConvertBAM2TDF extends Tool with Main{
   }
   def processFile(file: File, config: Config) = {
 
-    if (!new File(file + ".bai").exists() && !new File(file.toString().replaceAll("\\.bam$", ".bai")).exists()) {
+    if (!new File(""+file + ".bai").exists() && !new File(file.toString().replaceAll("\\.bam$", ".bai")).exists()) {
 
       System.err.println("WARNING: Could not find BAI file for " + file);
       System.err.println("\ttdformat needs a BAI file for each BAM file.");

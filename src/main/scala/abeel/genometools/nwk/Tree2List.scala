@@ -3,7 +3,7 @@ package abeel.genometools.nwk
 import java.io.File
 import java.io.PrintWriter
 import atk.compbio.tree.Tree
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import abeel.genometools.Main
 
 object Tree2List extends Main{
