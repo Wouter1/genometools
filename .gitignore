@@ -27,3 +27,5 @@ genometools-development.zip
 /.cache-tests
 /build/
 /.classpath
+/.project
+/.settings/
