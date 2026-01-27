@@ -1,7 +1,7 @@
 package pelican
 
 import atk.compbio.tree.Tree
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import java.io.File
 import abeel.genometools.Main
 

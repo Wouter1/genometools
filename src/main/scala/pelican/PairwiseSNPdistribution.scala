@@ -4,7 +4,7 @@ import java.io.File
 import atk.util.Tool
 import be.abeel.util.FrequencyMap
 import be.abeel.util.FrequencyMapUtils
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import abeel.genometools.Main
 
 /**
