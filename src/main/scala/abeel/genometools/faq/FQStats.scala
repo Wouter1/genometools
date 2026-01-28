@@ -28,9 +28,9 @@ object FaqStats extends Main {
 
    
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar faqstats") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input file. By default FASTA formatted. If you have a FASTQ, use the --fq flag") //, { v: String => config.spacerFile = v })
-      opt[Unit]("fq") action { (x, c) => c.copy(fastq = true) } text ("If you have a FASTQ file, use this flag") //, { v: String => config.spacerFile = v })
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(inputFile = x) }.text ("Input file. By default FASTA formatted. If you have a FASTQ, use the --fq flag") //, { v: String => config.spacerFile = v })
+      opt[Unit]("fq").action { (x, c) => c.copy(fastq = true) }. text ("If you have a FASTQ file, use this flag") //, { v: String => config.spacerFile = v })
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
 
     }
     parser.parse(args, Config()) map { config =>

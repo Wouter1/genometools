@@ -3,7 +3,8 @@ package abeel.genometools.gfa
 import abeel.genometools.Main
 import java.io.File
 import atk.io.NixWriter
-import scala.collection.mutable.MutableList
+//import scala.collection.mutable.MutableList
+import java.util.ArrayList
 import atk.tools.Histogram.HistogramConfig
 import atk.tools.Histogram
 import scala.collection.mutable.HashMap
@@ -25,8 +26,8 @@ This tool is still in development and is not for general use.
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar gfa-fast-statistics") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input GFA formatted file.")
-      opt[File]('o', "output") action { (x, c) => c.copy(outputFile = x) } text ("Output file containing statistics.")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(inputFile = x) }.text ("Input GFA formatted file.")
+      opt[File]('o', "output").action { (x, c) => c.copy(outputFile = x) }.text ("Output file containing statistics.")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -36,7 +37,7 @@ This tool is still in development and is not for general use.
       val pw = new NixWriter(config.outputFile, config)
 
       val segments = new HashMap[Int, FastSegment]
-      val header = new MutableList[String]
+      val header = new ArrayList[String]
       //      val links = new MutableList[(Int, Int)]
       var linkCount = 0L
 
@@ -48,7 +49,7 @@ This tool is still in development and is not for general use.
         //        println(l)
 
         l(0) match {
-          case 'H' => header += l
+          case 'H' => header.add(l)
           case 'S' =>
             val arr = l.split("\t")
             //            assume(arr(4).startsWith("ORI"))

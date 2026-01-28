@@ -2,7 +2,8 @@ package abeel.genometools.gfa
 import abeel.genometools.Main
 import java.io.File
 import java.io.PrintWriter
-import scala.collection.mutable.MutableList
+//import scala.collection.mutable.MutableList
+import java.util.ArrayList
 import atk.tools.Histogram
 import atk.tools.Histogram.HistogramConfig
 import atk.io.NixWriter
@@ -25,8 +26,8 @@ This tool is still in development and is not for general use.
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar gfa-statistics") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input GFA formatted file.")
-      opt[File]('o', "output") action { (x, c) => c.copy(outputFile = x) } text ("Output file containing statistics.")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(inputFile = x) }.text ("Input GFA formatted file.")
+      opt[File]('o', "output").action { (x, c) => c.copy(outputFile = x) }.text ("Output file containing statistics.")
 
     }
 
@@ -53,7 +54,9 @@ This tool is still in development and is not for general use.
         val arr = line.split("\t")
         assume(arr(4).startsWith("ORI"))
 
-        new Segment(arr(1).toInt, arr(2).length(), arr(4).drop(6).replaceAll(".fna", "").replaceAll(".fasta", "").split(";").toList.map(v => Dictionary.get(v)), MutableList.empty, MutableList.empty)
+        new Segment(arr(1).toInt, arr(2).length(), arr(4).drop(6)
+             .replaceAll(".fna", "").replaceAll(".fasta", "")
+             .split(";").toList.map(v => Dictionary.get(v)), new ArrayList, new ArrayList)
       })
 
       println("Mapping identifiers...")
@@ -70,8 +73,8 @@ This tool is still in development and is not for general use.
         val from = arr(1).toInt
         val to = arr(3).toInt
 
-        nodeMap(from).outgoing += to
-        nodeMap(to).incoming += from
+        nodeMap(from).outgoing.add(to)
+        nodeMap(to).incoming.add(from)
 
         from.toInt -> to.toInt
 
@@ -95,7 +98,11 @@ This tool is still in development and is not for general use.
 
       val inDegree = links.groupBy(_._2).mapValues(_.size)
 
-      Histogram.plot(inDegree.toList.map(_._2 + 0.0), new HistogramConfig(nobin = true, x = "In-degree per segment", y = "Frequency", outputPrefix = config.outputFile + ".indegree", domainStart = 0, domainEnd = genomeCount))
+      Histogram.plot(inDegree.toList.map(_._2 + 0.0), 
+          new HistogramConfig(nobin = true, 
+          x = "In-degree per segment", y = "Frequency", 
+          outputPrefix = ""+config.outputFile + ".indegree", 
+          domainStart = 0, domainEnd = genomeCount))
 
       val histIn = inDegree.map(_._2).groupBy(identity).mapValues(_.size).toList.sortBy(_._1)
       pw.println()
@@ -103,7 +110,11 @@ This tool is still in development and is not for general use.
       histIn.map { case (x, y) => pw.println(x + "\t" + y) }
 
       val outDegree = links.groupBy(_._1).mapValues(_.size)
-      Histogram.plot(outDegree.toList.map(_._2 + 0.0), new HistogramConfig(nobin = true, x = "Out-degree per segment", y = "Frequency", outputPrefix = config.outputFile + ".outdegree", domainStart = 0, domainEnd = genomeCount))
+      Histogram.plot(outDegree.toList.map(_._2 + 0.0), 
+          new HistogramConfig(nobin = true, 
+          x = "Out-degree per segment", y = "Frequency", 
+          outputPrefix = ""+config.outputFile + ".outdegree", 
+          domainStart = 0, domainEnd = genomeCount))
       val histOut = outDegree.map(_._2).groupBy(identity).mapValues(_.size).toList.sortBy(_._1)
      
       pw.println()

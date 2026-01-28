@@ -28,10 +28,10 @@ object Faq2GC extends Main {
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar faq2gc") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input file. By default FASTA formatted. If you have a FASTQ, use the --fq flag")
-      opt[Unit]("fq") action { (x, c) => c.copy(fastq = true) } text ("If you have a FASTQ file, use this flag")
-      opt[File]('o', "output") action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
-      opt[Int]('w', "window") action { (x, c) => c.copy(window = x) } text ("Window length, default = " + new Config().window)
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(inputFile = x) }.text ("Input file. By default FASTA formatted. If you have a FASTQ, use the --fq flag")
+      opt[Unit]("fq").action { (x, c) => c.copy(fastq = true) }.text ("If you have a FASTQ file, use this flag")
+      opt[File]('o', "output").action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
+      opt[Int]('w', "window").action { (x, c) => c.copy(window = x) }.text ("Window length, default = " + new Config().window)
 
     }
     parser.parse(args, Config()) map { config =>
@@ -69,7 +69,8 @@ object Faq2GC extends Main {
 
     }
 
-     val pw = if(config.outputFile!=null) new NixWriter(config.outputFile, config) else new NixWriter(config.inputFile+".gc",config)
+     val pw = if(config.outputFile!=null) new NixWriter(config.outputFile, config) 
+              else new NixWriter(""+config.inputFile+".gc",config)
     
     map.toList.sortBy(_._1).map { case (x, y) => pw.println(x + "\t" + y) }
 

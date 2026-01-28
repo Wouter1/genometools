@@ -25,14 +25,12 @@ object Faq2Kmer extends Main {
    """
 
   override def main(args: Array[String]): Unit = {
-
-   
-
+  
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar faq2kmer") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input file. By default FASTA formatted. If you have a FASTQ, use the --fq flag")
-      opt[Unit]("fq") action { (x, c) => c.copy(fastq = true) } text ("If you have a FASTQ file, use this flag") 
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
-      opt[Int]('k', "kmer") action { (x, c) => c.copy(kmer = x) } text ("Kmer length, default = 4")
+      opt[File]('i', "input").required().action{ (x, c) => c.copy(inputFile = x) }.text ("Input file. By default FASTA formatted. If you have a FASTQ, use the --fq flag")
+      opt[Unit]("fq").action{ (x, c) => c.copy(fastq = true) }.text ("If you have a FASTQ file, use this flag") 
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
+      opt[Int]('k', "kmer").action{ (x, c) => c.copy(kmer = x) }.text ("Kmer length, default = 4")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -61,7 +59,7 @@ object Faq2Kmer extends Main {
 
     val pw = new PrintWriter(config.outputFile)
     pw.println(generatorInfo(config))
-    map.map { case (x, y) => pw.println(x + "\t" + y) }
+    map.map { case (x, y) => pw.println(""+x + "\t" + y) }
 
     pw.close
 
