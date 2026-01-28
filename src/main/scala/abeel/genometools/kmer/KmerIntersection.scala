@@ -22,9 +22,9 @@ object KmerIntersection extends Main {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar intersect-kmer") {
       //      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input BAM file. ")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
-      opt[String]("postfix") action { (x, c) => c.copy(postfix = x) } text ("String to append to identifiers to get kmer files.")
-      opt[String]("strains") action { (x, c) => c.copy(strains = x) } text ("Semi-colon separated list of strain identifiers, e.g. strain1;strain2;strain3")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
+      opt[String]("postfix").action { (x, c) => c.copy(postfix = x) }.text ("String to append to identifiers to get kmer files.")
+      opt[String]("strains").action { (x, c) => c.copy(strains = x) }.text ("Semi-colon separated list of strain identifiers, e.g. strain1;strain2;strain3")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -42,7 +42,7 @@ object KmerIntersection extends Main {
 
     val map = scala.collection.mutable.Map[Long, Int]().withDefaultValue(0)
     var hashSize = 0
-    for (strain <- config.strains.split(";")) {
+    for (strain:String <- config.strains.split(";")) {
       println("processing: " + strain + "\t" + LocalDateTime.now())
       for (line <- tLinesIterator(strain + config.postfix)) {
         val seq = line.split("\t")(0)

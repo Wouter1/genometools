@@ -6,6 +6,7 @@ import atk.compbio.tree.Tree
 import scala.jdk.CollectionConverters._
 import abeel.genometools.Main
 import atk.compbio.tree.TreeNode
+import java.util.LinkedList
 
 object Nwk2Nodes extends Main {
 
@@ -16,8 +17,8 @@ object Nwk2Nodes extends Main {
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar nwk2nodes") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("Input file")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(output = x) } text ("Output file")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(input = x) }.text ("Input file")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(output = x) }.text ("Output file")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -36,9 +37,9 @@ object Nwk2Nodes extends Main {
 
     def traverse(node: TreeNode, lvl: Int, childIdx: Int): Unit = {
       if (!node.isLeaf()) {
-        val leaves = tree.getLeaves(node).map(_.getName)
+        val leaves = tree.getLeaves(node).asScala.map( _.getName)
         pw.println("internal_" + lvl + "_" + childIdx +"\t"+leaves.size+ "\t" + leaves.mkString(";"))
-        for (child <- node.children.zipWithIndex) {
+        for (child <- node.children.asScala.zipWithIndex) {
           traverse(child._1, lvl + 1, child._2)
         }
       } else {

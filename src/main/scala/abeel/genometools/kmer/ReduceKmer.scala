@@ -22,9 +22,9 @@ object ReduceKmer extends Main {
   override def main(args: Array[String]): Unit = {
  
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar reducekmer") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input BAM file. ")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
-      opt[Int]('c', "count") action { (x, c) => c.copy(count= x) } text ("Minimum count to keep, default = " + new Config().count)
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(inputFile = x) }.text ("Input BAM file. ")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
+      opt[Int]('c', "count").action { (x, c) => c.copy(count= x) }.text ("Minimum count to keep, default = " + new Config().count)
 
     }
     parser.parse(args, Config()) map { config =>

@@ -22,8 +22,8 @@ object GroupAP extends Main {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar groupprofile") {
 
-      opt[File]('o', "output") required () action { (x, c) => c.copy(output = x) } text ("File where you want the output to be written")
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("File containing a AP matrix for each Kmer per strain")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(output = x) }.text ("File where you want the output to be written")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(input = x) }.text ("File containing a AP matrix for each Kmer per strain")
 
     }
     parser.parse(args, Config()) map { config =>

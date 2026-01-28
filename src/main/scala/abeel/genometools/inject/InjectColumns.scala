@@ -36,12 +36,12 @@ object InjectColumns extends Tool with Main{
     }
 
     val parser = new scopt.OptionParser[Config]("java -jar injectcolumns.jar") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input file in which to inject data") //, { v: String => config.spacerFile = v })
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(inputFile = x) }.text ("Input file in which to inject data") //, { v: String => config.spacerFile = v })
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
 
       //      opt("o", "output", "<file>", "File where you want the output to be written", { v: String => config.outputFile = v })
       //
-      arg[File]("<file>...") unbounded () required () action { (x, c) => c.copy(files = c.files :+ x) } text ("List of files that contains data you want injected. They need to be key\tvalue pairs. These files are applied in the order specified. So later files may inject based on information injected in earlier files.")
+      arg[File]("<file>...").unbounded ().required ().action { (x, c) => c.copy(files = c.files :+ x) }.text ("List of files that contains data you want injected. They need to be key\tvalue pairs. These files are applied in the order specified. So later files may inject based on information injected in earlier files.")
 
       //      arg("<file>", "<file> is the BAM file you like to spoligotype", { v: String => config.inputFile = v })
       // arglist("<file>...", "arglist allows variable number of arguments",

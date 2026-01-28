@@ -29,8 +29,8 @@ object Kmer2AP extends Main {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar kmer2matrix") {
 
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("File containing a list of kmer files to be included in the matrix.")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
+      opt[File]('i', "input").required (). action { (x, c) => c.copy(input = x) }.text ("File containing a list of kmer files to be included in the matrix.")
 
     }
     parser.parse(args, Config()) map { config =>

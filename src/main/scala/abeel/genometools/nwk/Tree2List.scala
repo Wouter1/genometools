@@ -1,10 +1,14 @@
 package abeel.genometools.nwk
 
+import abeel.genometools.Main
+
 import java.io.File
 import java.io.PrintWriter
+
 import atk.compbio.tree.Tree
+import atk.compbio.tree.TreeNode
+
 import scala.jdk.CollectionConverters._
-import abeel.genometools.Main
 
 object Tree2List extends Main{
 
@@ -13,8 +17,8 @@ object Tree2List extends Main{
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar nwk2list") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("Input file")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(output = x) } text ("Output file")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(input = x) }.text ("Input file")
+      opt[File]('o', "output").required().action { (x, c) => c.copy(output = x) }.text ("Output file")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -29,7 +33,7 @@ object Tree2List extends Main{
     pw.println(generatorInfo(config))
     val tree=new Tree(config.input.toString())
     val leaves=tree.getLeaves(tree.root)
-    leaves.map(l=>pw.println(l.getName))
+    leaves.map( (l:TreeNode) =>pw.println(l.getName))
     pw.close
     
   }
