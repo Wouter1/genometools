@@ -5,6 +5,7 @@ import java.io.PrintWriter
 import atk.util.Tool
 import java.io.File
 import abeel.genometools.Main
+import java.util.Arrays
 
 object PrepareENADownload extends Main {
 
@@ -25,10 +26,10 @@ object PrepareENADownload extends Main {
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar ena-download") {
-      opt[String]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("Semi-colon separated list of ENA identifiers or filename with list of identifiers.") //, { v: String => config.spacerFile = v })
-      opt[File]('o', "output") action { (x, c) => c.copy(output = x) } text ("Output file, by default output is written to console.")
-      opt[Unit]("debug") action { (x, c) => c.copy(debug = true) } text ("Show debug output")
-      opt[Unit]("broad") action { (x, c) => c.copy(broad = true) } text ("Use Broad Institute organization of projects, with an individual project per sample.")
+      opt[String]('i', "input").required().action { (x, c) => c.copy(input = x) }.text ("Semi-colon separated list of ENA identifiers or filename with list of identifiers.") //, { v: String => config.spacerFile = v })
+      opt[File]('o', "output").action { (x, c) => c.copy(output = x) }. text ("Output file, by default output is written to console.")
+      opt[Unit]("debug").action{ (x, c) => c.copy(debug = true) }.text ("Show debug output")
+      opt[Unit]("broad").action{ (x, c) => c.copy(broad = true) }.text ("Use Broad Institute organization of projects, with an individual project per sample.")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -45,7 +46,7 @@ object PrepareENADownload extends Main {
     val f = new File(config.input)
     val pw = if (of != null) {
       of.getAbsoluteFile().getParentFile().mkdirs()
-      new PrintWriter(of+".download.sh")
+      new PrintWriter(""+of+".download.sh")
     } else {
       new PrintWriter(System.out)
     }
@@ -66,7 +67,7 @@ object PrepareENADownload extends Main {
 
       if (of != null) {
 
-        new PrintWriter(of + ".conversion.txt")
+        new PrintWriter(""+of + ".conversion.txt")
       } else {
         new PrintWriter(System.out)
       }
@@ -75,7 +76,7 @@ object PrepareENADownload extends Main {
 
     val pwx = if (of != null) {
 
-      new PrintWriter(of + ".sourcequery.txt")
+      new PrintWriter(""+of + ".sourcequery.txt")
     } else {
       new PrintWriter(System.out)
     }
@@ -123,7 +124,11 @@ object PrepareENADownload extends Main {
         val column = if (arr(3).trim.size == 0) arr(4) else arr(3)
         val files = column.split(";")
         
-        files.filterNot(_.size==0).map(f => pw.print("wget -q " + f + "\n"))
+        //files.filterNot(_.size==0).map(f => pw.print("wget -q " + f + "\n"))
+        for (f:String <- files) {
+          if (f.size!=0) {  pw.print("wget -q " + f + "\n") }
+        }
+        
         pw.print("cd ..\n")
         
         if (files(0).size == 0) {

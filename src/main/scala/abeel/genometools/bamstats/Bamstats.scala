@@ -23,8 +23,8 @@ object Bamstats extends Main {
   override def main(args: Array[String]) : Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar bamstats") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input file")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written")
+      opt[File]('i', "input").required().action { (x, c) => c.copy(inputFile = x) }.text ("Input file")
+      opt[File]('o', "output").required().action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -43,18 +43,27 @@ object Bamstats extends Main {
 
     val fm = new FrequencyMap
     val fmReads=new FrequencyMap
-    val filtered = sam.iterator().filter(f => (!f.getReadPairedFlag()|| (f.getFirstOfPairFlag() && !f.getMateUnmappedFlag() && f.getReferenceIndex() == f.getMateReferenceIndex())) && f.getMappingQuality() > 0)
-    while (filtered.hasNext) {
-      val sr = filtered.next
-      val s = sr.getAlignmentStart()
-      val e = if(sr.getMateAlignmentStart()>1)sr.getMateAlignmentStart() else sr.getAlignmentStart()
-      val diff = math.abs(e - s) + sr.getReadLength()
-      fm.count(diff)
-      fmReads.count(sr.getReadLength())
+    
+    
+    
+    val iter = sam.iterator()
+    //val filtered = sam.iterator().filter(f => (!f.getReadPairedFlag()|| (f.getFirstOfPairFlag() && !f.getMateUnmappedFlag() && f.getReferenceIndex() == f.getMateReferenceIndex())) && f.getMappingQuality() > 0)
+    while (iter.hasNext) {
+      val f=iter.next
+      if ((!f.getReadPairedFlag()|| (f.getFirstOfPairFlag() && !f.getMateUnmappedFlag() 
+          && f.getReferenceIndex() == f.getMateReferenceIndex())) 
+          && f.getMappingQuality() > 0) {
+        val sr = f
+        val s = sr.getAlignmentStart()
+        val e = if(sr.getMateAlignmentStart()>1)sr.getMateAlignmentStart() else sr.getAlignmentStart()
+        val diff = math.abs(e - s) + sr.getReadLength()
+        fm.count(diff)
+        fmReads.count(sr.getReadLength())
+      }
     }
     
-    val pw=new PrintWriter(config.outputFile+".txt")
-    pw.println(generatorInfo)
+    val pw=new PrintWriter(""+config.outputFile+".txt")
+    pw.println(generatorInfo())
     pw.println("fraglen.average="+fm.average())
     pw.println("fraglen.median="+fm.median())
     pw.println("fraglen.mode="+fm.mode())
