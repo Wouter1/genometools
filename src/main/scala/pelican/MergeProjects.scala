@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption
 import java.nio.file.CopyOption
 import atk.io.IOTools
 import abeel.genometools.Main
+import scala.collection.parallel.CollectionConverters._
 
 object MergeProjects extends Main {
 override def description = """Merge several projects together."""
@@ -36,13 +37,13 @@ override def description = """Merge several projects together."""
 
   case class Config(val output: File = null, val input: File = null, val drugSynonyms: File = null, val skipVCF: Boolean = false)
 
- override def main(args: Array[String]): Unit = {
+   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar pelican.jar merge-projects") {
-      opt[File]('o', "output") required () action { (x, c) => c.copy(output = x) } text ("Output directory prefix (should included dated directory)")
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("Input file with description of projects.")
-      opt[File]('d', "drug") action { (x, c) => c.copy(drugSynonyms = x) } text ("Input file with synonym descriptions of drugs.")
-      opt[Unit]("skip-vcf") action { (x, c) => c.copy(skipVCF = true) } text ("Skip copying VCF files.")
+      opt[File]('o', "output"). required ().action { (x, c) => c.copy(output = x) }. text ("Output directory prefix (should included dated directory)")
+      opt[File]('i', "input"). required ().action { (x, c) => c.copy(input = x) }. text ("Input file with description of projects.")
+      opt[File]('d', "drug"). action { (x, c) => c.copy(drugSynonyms = x) }. text ("Input file with synonym descriptions of drugs.")
+      opt[Unit]("skip-vcf"). action { (x, c) => c.copy(skipVCF = true) }. text ("Skip copying VCF files.")
 
     }
 
@@ -63,9 +64,9 @@ override def description = """Merge several projects together."""
     }
     if (config.drugSynonyms != null) {
       assume(config.drugSynonyms.exists(), "File does not exist: " + config.drugSynonyms)
-      val intermediate = config.output + "/drugs.merge.initial"
+      val intermediate = ""+ config.output + "/drugs.merge.initial"
       val pwDrug = new PrintWriter(intermediate)
-      pwDrug.println(generatorInfo)
+      pwDrug.println(generatorInfo())
       pwDrug.println("# This file is auto-created by merging:")
 
       val drugsMappingPairs = lines.map(f => {
@@ -103,7 +104,7 @@ override def description = """Merge several projects together."""
        */
       val pre = tLines(intermediate).map(_.split("\t").toList).transpose.map(f => f(0) -> f).toMap
 
-      val px = new PrintWriter(config.output + "/drugs.subset")
+      val px = new PrintWriter(""+config.output + "/drugs.subset")
       val clustering = tLines(config.drugSynonyms).map(_.trim.split("\t").toList)
 
       println(clustering.mkString("\n"))
@@ -142,14 +143,14 @@ override def description = """Merge several projects together."""
      * Copy annotated reduced VCF files
      */
     if (!config.skipVCF) {
-      val ofx = new File(config.output.getAbsoluteFile().getParentFile() + "/reduced_vcfs/")
+      val ofx = new File(""+config.output.getAbsoluteFile().getParentFile() + "/reduced_vcfs/")
       ofx.mkdirs()
       lines.map(f => {
-        val pipelineDir = new File(new File(f).getParentFile() + "/reduced_vcfs/")
+        val pipelineDir = new File(""+ new File(f).getParentFile() + "/reduced_vcfs/")
         /* Default to pipeline directory */
         val fs = if (pipelineDir.exists()) {
           println("Using pipeline directory for " + f)
-          new File(new File(f).getParentFile() + "/reduced_vcfs/").listFiles(new PatternFileFilter(".*.annotated.vcf")).par
+          new File(""+ new File(f).getParentFile() + "/reduced_vcfs/").listFiles(new PatternFileFilter(".*.annotated.vcf")).par
 
         } else { /* Else search recursively for *.annotated.vcf files */
           println("Recursively searching for " + f)
@@ -162,7 +163,7 @@ override def description = """Merge several projects together."""
 
         println("\tCopying files")
         fs.map(g => {
-          val of = new File(ofx + "/" + g.getName())
+          val of = new File(""+ofx + "/" + g.getName())
           if (!of.exists() || of.length != g.length)
             Files.copy(g.toPath(), of.toPath())
 
@@ -174,11 +175,11 @@ override def description = """Merge several projects together."""
      * Merge files
      */
     List("conversion.txt", "ale.id.txt", "manhattan.id.txt", "bass.id.txt").map { key =>
-      val pw = new PrintWriter(config.output.getAbsoluteFile().getParentFile() + "/" + key)
-      pw.println(generatorInfo)
+      val pw = new PrintWriter(""+ config.output.getAbsoluteFile().getParentFile() + "/" + key)
+      pw.println(generatorInfo())
       pw.println("# This file is auto-created by merging:")
       val mergedLines = lines.map(f => {
-        val file = new File(new File(f).getParentFile() + "/" + key)
+        val file = new File(""+ new File(f).getParentFile() + "/" + key)
         if (!file.exists) {
           pw.println("# Missing file:     " + file)
           List.empty[String]
@@ -195,8 +196,8 @@ override def description = """Merge several projects together."""
 
     List("vcflist.txt.subset", "pgg.txt", "pilon.metrics.txt", "contamination.txt", "ambiguity.perSample.txt", "gnumbers.included.txt").map { key =>
 
-      val pw = new PrintWriter(config.output + "/" + key)
-      pw.println(generatorInfo)
+      val pw = new PrintWriter(""+ config.output + "/" + key)
+      pw.println(generatorInfo())
       pw.println("# This file is auto-created by merging:")
       val mergedLines = lines.map(f => {
         val file = f + "/" + key
@@ -214,8 +215,8 @@ override def description = """Merge several projects together."""
       pw.close
     }
     List("lineages.txt", "spoligotypes.txt").map { key =>
-      val pw = new PrintWriter(config.output + "/" + config.output.getName() + "." + key)
-      pw.println(generatorInfo)
+      val pw = new PrintWriter("" + config.output + "/" + config.output.getName() + "." + key)
+      pw.println(generatorInfo())
       pw.println("# This file is auto-created by merging:")
       val mergedLines = lines.map(f => {
         val prefix = new File(f).getName()

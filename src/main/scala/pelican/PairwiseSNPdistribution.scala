@@ -6,6 +6,7 @@ import be.abeel.util.FrequencyMap
 import be.abeel.util.FrequencyMapUtils
 import scala.jdk.CollectionConverters._
 import abeel.genometools.Main
+import java.util.Arrays
 
 /**
  *
@@ -26,8 +27,8 @@ object PairwiseSNPdistribution extends Main {
   case class Config(input: File = new File("snp.matrix.txt"), output: File = new File("snp.matrix.distribution.png"))
   override def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar snpmatrix-distribution [options]") {
-      opt[File]('i', "input") action { (x, c) => c.copy(input = x) } text ("Input file from SNP matrix program. Default: snp.matrix.txt")
-      opt[File]('o', "output") action { (x, c) => c.copy(output = x) } text ("Output file. Default: snp.matrix.distribution.png")
+      opt[File]('i', "input").action { (x, c) => c.copy(input = x) }.text ("Input file from SNP matrix program. Default: snp.matrix.txt")
+      opt[File]('o', "output").action { (x, c) => c.copy(output = x) }.text ("Output file. Default: snp.matrix.distribution.png")
     }
 
     parser.parse(args, Config()).map { config =>
@@ -52,9 +53,11 @@ object PairwiseSNPdistribution extends Main {
     //			boolean countNormalization, int lower, int upper, String[] labels,
     //			String xAxis, String yAxis
 
-    FMPlot.plot(null, List(fm), config.output.toString(), false, 0, 0, Array("SNPS"), "Pairwise SNP distance", "Number of pairs")
+    FMPlot.plot(null, Arrays.asList(fm), config.output.toString(), 
+    	false, 0, 0, Array("SNPS"), "Pairwise SNP distance", "Number of pairs")
     fm.truncate(0, 100)
-    FMPlot.plot(null, List(fm), config.output.toString() + "_100", false, 0, 0, Array("SNPS"), "Pairwise SNP distance", "Number of pairs")
+    FMPlot.plot(null, Arrays.asList(fm), config.output.toString() + "_100", 
+    	false, 0, 0, Array("SNPS"), "Pairwise SNP distance", "Number of pairs")
     //    FMPlot.plot(fm, config.output.toString()+"_100")
 
   }

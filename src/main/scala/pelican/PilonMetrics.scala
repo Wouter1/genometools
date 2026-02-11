@@ -27,7 +27,7 @@ object PilonMetrics extends Main {
     val map = tMap(tLines(in))
     val metrics = map.mapValues(_.replaceAll("pilon.vcf", "pilon.metrics"))
     val pw = new PrintWriter(out)
-    pw.println(generatorInfo)
+    pw.println(generatorInfo())
     pw.println("# fragCoverage")
     for (line <- metrics) {
       val values = tMap(tLines(line._2), limitSplit = false)

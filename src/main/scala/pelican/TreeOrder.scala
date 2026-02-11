@@ -13,7 +13,7 @@ object TreeOrder extends Main {
   
   override def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar list-tree") {
-      opt[File]('t', "tree") required () action { (x, c) => c.copy(tree = x) } text ("Phylogenetic tree file.")
+      opt[File]('t', "tree").required ().action { (x, c) => c.copy(tree = x) }.text ("Phylogenetic tree file.")
 
     }
 
@@ -27,7 +27,7 @@ object TreeOrder extends Main {
 
     val tree = new Tree(config.tree.toString())
 
-    println(tree.getLeaves(tree.root).toList.map(_.getName()).mkString("\n"))
+    println(tree.getLeaves(tree.root).asScala.map(_.getName()).mkString("\n"))
 
   }
 
