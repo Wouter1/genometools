@@ -7,6 +7,8 @@ import java.io.File
 import java.io.PrintWriter
 import abeel.genometools.Main
 
+import scala.collection.parallel.CollectionConverters._
+
 object VCF2gcWindows extends Main {
 
   case class Config(val input: File = null, val output: File = null, val window:Int=1000, val incomplete:Boolean=false)
@@ -42,7 +44,7 @@ object VCF2gcWindows extends Main {
       println("group per chr")
      
       val pw = new PrintWriter(config.output)
-      pw.println(generatorInfo)
+      pw.println(generatorInfo())
       pw.println("##gcRate\tavgDepths\tat\tgc\tvalues\tdepth values")
       var complete = 0
       var incomplete = 0

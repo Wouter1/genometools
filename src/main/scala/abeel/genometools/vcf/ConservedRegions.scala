@@ -23,13 +23,13 @@ object ConservedRegions extends Main {
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools vcf2conserved") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("File that contains the list of VCF files to scan")
-      opt[File]('o', "output") action { (x, c) => c.copy(output = x) } text ("File where you want the output to be written")
-      opt[Int]("lsv-flank") action { (x, c) => c.copy(flankLSV = x) } text ("How many flanking bases are also removed from conserved area for each LSV. (default=100)")
-      opt[Int]("snv-flank") action { (x, c) => c.copy(flankSNV = x) } text ("How many flanking bases are also removed from conserved area for each SNV. (default=100). Note that by default SNV's are not taking into account, see 'include-SNV' option.")
-      opt[Unit]("include-SNV") action { (x, c) => c.copy(includeSNV = true) } text ("Include SNVs to determine conserved regions.")
-      opt[Int]('l', "len") required () action { (x, c) => c.copy(genomeLen = x) } text ("Length of the genome.")
-      opt[Int]("min-len") action { (x, c) => c.copy(reportLen = x) } text ("Minimum length of reported regions. (default=100)")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(input = x) }.text ("File that contains the list of VCF files to scan")
+      opt[File]('o', "output").action { (x, c) => c.copy(output = x) }.text ("File where you want the output to be written")
+      opt[Int]("lsv-flank").action { (x, c) => c.copy(flankLSV = x) }.text ("How many flanking bases are also removed from conserved area for each LSV. (default=100)")
+      opt[Int]("snv-flank").action { (x, c) => c.copy(flankSNV = x) }.text ("How many flanking bases are also removed from conserved area for each SNV. (default=100). Note that by default SNV's are not taking into account, see 'include-SNV' option.")
+      opt[Unit]("include-SNV").action { (x, c) => c.copy(includeSNV = true) }.text ("Include SNVs to determine conserved regions.")
+      opt[Int]('l', "len").required ().action { (x, c) => c.copy(genomeLen = x) }.text ("Length of the genome.")
+      opt[Int]("min-len").action { (x, c) => c.copy(reportLen = x) }.text ("Minimum length of reported regions. (default=100)")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -43,8 +43,8 @@ object ConservedRegions extends Main {
 
     val list = tLines(config.input).map(new File(_))
 
-    val pw = new PrintWriter(config.output + ".intermediate")
-    pw.println(generatorInfo)
+    val pw = new PrintWriter("" + config.output + ".intermediate")
+    pw.println(generatorInfo())
     pw.println("# Tool configuration: ")
     pw.println("# " + GenomeToolsConsole.getDeclaredFields(config).mkString("\n# "))
 
@@ -94,7 +94,7 @@ object ConservedRegions extends Main {
     /**
      * Convert information to actual regions
      */
-    val values = tLines(config.output + ".intermediate").map(_.split("\t").map(_.toInt))
+    val values = tLines("" + config.output + ".intermediate").map(_.split("\t").toList.map(_.toInt))
     val lsv = values.map(f => f(1) + (if (config.includeSNV) f(0) else 0))
 
     def encode(s: List[Int]) = {
@@ -113,7 +113,7 @@ object ConservedRegions extends Main {
     val merged = startPositions.zip(rle)
     val filtered = merged.filter(p => p._2._2 == 0 && p._2._1 >= config.reportLen)
     val pwx = new PrintWriter(config.output)
-    pwx.println(generatorInfo)
+    pwx.println(generatorInfo())
     pwx.println("# Number of regions: " + filtered.size)
     pwx.println("## position\tlength")
     pwx.println(filtered.map(f => f._1 + "\t" + f._2._1).mkString("\n"))

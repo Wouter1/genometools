@@ -18,9 +18,9 @@ object Vcf2MFA extends Main {
   override def main(args: Array[String]):Unit =  {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar vcf2mfa") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(vcfPathFile = x) } text ("VCF path file")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(output = x) } text ("Output name.")
-      opt[Int]("mq") action {(x,c)=>c.copy(mq=x)} text("Filter on mapping quality < <value> (default = 0, no filtering)")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(vcfPathFile = x) }.text ("VCF path file")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(output = x) }.text ("Output name.")
+      opt[Int]("mq").action {(x,c)=>c.copy(mq=x)}.text("Filter on mapping quality < <value> (default = 0, no filtering)")
     }
 
     

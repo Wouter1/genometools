@@ -13,9 +13,9 @@ object Phy2Maf extends Main {
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar phy2maf") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input phylip formatted file.")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("Output file in maf format.")
-      opt[Int]('n',"n") action { (x, c) => c.copy(n = x) } text ("Characters per line in mfa")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(inputFile = x) }. text ("Input phylip formatted file.")
+      opt[File]('o', "output").required().action { (x, c) => c.copy(outputFile = x) }.text ("Output file in maf format.")
+      opt[Int]('n',"n").action { (x, c) => c.copy(n = x) }.text ("Characters per line in mfa")
 
     }
     parser.parse(args, Config()) map { config =>

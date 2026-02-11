@@ -38,7 +38,7 @@ trait Main extends Tool {
 
 object GenomeToolsConsole extends Tool {
 
-  def getDeclaredFields(cc: AnyRef) : Unit = {
+  def getDeclaredFields(cc: AnyRef) : List[ (String, Any) ] = {
     val m = (Map[String, Any]() /: cc.getClass.getDeclaredFields) { (a, f) =>
       f.setAccessible(true)
       a + (f.getName -> f.get(cc))

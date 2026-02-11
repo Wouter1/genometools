@@ -15,10 +15,10 @@ object VCFDiff extends Tool {
     case class Config(val aOut: File = null, val bOut: File = null, val a: File = null, val b: File = null)
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar vcf-diff") {
-      opt[File]("output-a") action { (x, c) => c.copy(aOut = x) } text ("File with unique mutations in first input file")
-      opt[File]("output-b") action { (x, c) => c.copy(bOut = x) } text ("File with unique mutations in second input file")
-      opt[File]('a', "first") required () action { (x, c) => c.copy(a = x) } text ("First VCF file you want to analyze")
-      opt[File]('b', "second") required () action { (x, c) => c.copy(b = x) } text ("Second VCF file you want to analyze")
+      opt[File]("output-a").action { (x, c) => c.copy(aOut = x) }.text ("File with unique mutations in first input file")
+      opt[File]("output-b").action { (x, c) => c.copy(bOut = x) }.text ("File with unique mutations in second input file")
+      opt[File]('a', "first").required ().action { (x, c) => c.copy(a = x) }.text ("First VCF file you want to analyze")
+      opt[File]('b', "second").required ().action { (x, c) => c.copy(b = x) }.text ("Second VCF file you want to analyze")
     }
 
     parser.parse(args, Config()) map { config =>

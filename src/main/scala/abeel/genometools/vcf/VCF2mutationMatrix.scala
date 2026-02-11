@@ -28,16 +28,16 @@ This tool is still in development and is not for general use.
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar vcf2matrix") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("Input file with a list of VCF files")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(output = x) } text ("Output file")
-      opt[Int]("sizeLimit") action { (x, c) => c.copy(sizeLimit = x) } text ("Size limit of mutations to consider. Sites in the genome that have variants larger than this limit will be output in a separate file. (Default = 10)")
-      //      opt[Int]("window") action { (x, c) => c.copy(window= x) } text ("Window size")
-      //      opt[Unit]("incomplete")action { (x, c) => c.copy(incomplete= true) } text ("Include incomplete windows")
+      opt[File]('i', "input").required().action { (x, c) => c.copy(input = x) }.text ("Input file with a list of VCF files")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(output = x) }.text ("Output file")
+      opt[Int]("sizeLimit").action { (x, c) => c.copy(sizeLimit = x) }.text ("Size limit of mutations to consider. Sites in the genome that have variants larger than this limit will be output in a separate file. (Default = 10)")
+      //      opt[Int]("window").action { (x, c) => c.copy(window= x) }.text ("Window size")
+      //      opt[Unit]("incomplete").action { (x, c) => c.copy(incomplete= true) }.text ("Include incomplete windows")
 
     }
     parser.parse(args, Config()) map { config =>
 
-      init(config.input + ".log")
+      init(""+config.input + ".log")
       val pw = new PrintWriter(config.output)
       pw.println(generatorInfo(config))
       pw.println()
@@ -48,7 +48,7 @@ This tool is still in development and is not for general use.
       pw.println("# Input files")
       pw.println("# " + files.mkString("\n# "))
 
-      val pxB = new PrintWriter(config.output + ".ignored")
+      val pxB = new PrintWriter(""+config.output + ".ignored")
       pxB.println(generatorInfo(config))
 
       val blackListPositions = for (file <- files) yield {
