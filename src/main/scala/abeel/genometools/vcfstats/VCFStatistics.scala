@@ -14,14 +14,14 @@ object VCFStatistics extends Tool with Main {
 
   override def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar vcf-statistics ") {
-      opt[File]('o', "output") action { (x, c) => c.copy(output = x) } text ("File where you want the output to be written, by default the output is written to the console.")
-      opt[File]('i', "input") required() action { (x, c) => c.copy(input = x) } text ("VCF file you want to analyze")
+      opt[File]('o', "output").action { (x, c) => c.copy(output = x) }.text ("File where you want the output to be written, by default the output is written to the console.")
+      opt[File]('i', "input").required().action { (x, c) => c.copy(input = x) }.text ("VCF file you want to analyze")
     }
 
     parser.parse(args, Config()) map { config =>
       val pw = if (config.output != null) new PrintWriter(config.output) else new PrintWriter(System.out)
 
-      pw.println(generatorInfo)
+      pw.println(generatorInfo())
 
       pw.println("input\t" + config.input)
       pw.println("output\t" + config.output)
@@ -38,10 +38,10 @@ object VCFStatistics extends Tool with Main {
       }
       pw.println("-- All events")
       pw.println("total\t"+fmAll.totalCount())
-      pw.println(fmAll.map(f => f._1 + "\t" + f._2).mkString("\n"))
+      pw.println(fmAll.asScala.map((k,v) => k + "\t" + v).mkString("\n"))
       pw.println("-- Passing filter events")
       pw.println("total\t"+fmPass.totalCount())
-      pw.println(fmPass.map(f => f._1 + "\t" + f._2).mkString("\n"))
+      pw.println(fmPass.asScala.map((k,v) => k + "\t" + v).mkString("\n"))
       pw.close
     }
   }

@@ -32,12 +32,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.broad.igv.WindowFunction;
-import org.broad.igv.CompressionUtils;
-import org.broad.igv.StringUtils;
-
-import net.sf.samtools.seekablestream.SeekableStream;
 import abeel.genometools.bam2tdf.LRUCache;
+import net.sf.samtools.seekablestream.SeekableStream;
 
 /**
  * @author jrobinso
@@ -45,8 +41,8 @@ import abeel.genometools.bam2tdf.LRUCache;
  */
 public class TDFReader {
 
-	static final Logger log = Logger.getLogger(TDFReader.class
-			.getCanonicalName());
+	static final Logger log = Logger
+			.getLogger(TDFReader.class.getCanonicalName());
 	public static final int GZIP_FLAG = 0x1;
 
 	// Cache to insure there is only 1 reader per file
@@ -59,10 +55,10 @@ public class TDFReader {
 	// private TrackType trackType;
 	private String trackLine;
 	private String[] trackNames;
-	private LRUCache<String, TDFGroup> groupCache = new LRUCache(20);
-	private LRUCache<String, TDFDataset> datasetCache = new LRUCache(20);
+	private LRUCache<String, TDFGroup> groupCache = new LRUCache<>(20);
+	private LRUCache<String, TDFDataset> datasetCache = new LRUCache<>(20);
 
-	private Map<WindowFunction, Double> valueCache = new HashMap();
+	private Map<WindowFunction, Double> valueCache = new HashMap<>();
 	private List<WindowFunction> windowFunctions;
 	private String locator;
 
@@ -89,8 +85,8 @@ public class TDFReader {
 
 		} catch (IOException ex) {
 			log.log(Level.SEVERE, "Error loading file: " + locator, ex);
-			throw new RuntimeException("Error loading file: " + ex.toString()
-					+ locator);
+			throw new RuntimeException(
+					"Error loading file: " + ex.toString() + locator);
 		}
 	}
 
@@ -129,7 +125,8 @@ public class TDFReader {
 		System.arraycopy(buffer, 0, magicBytes, 0, 4);
 		String magicString = new String(magicBytes);
 
-		if (!(magicString.startsWith("TDF") || !magicString.startsWith("IBF"))) {
+		if (!(magicString.startsWith("TDF")
+				|| !magicString.startsWith("IBF"))) {
 			String msg = "Error reading header: bad magic number.";
 			// throw new DataLoadException(msg, locator.getPath());
 		}
@@ -152,8 +149,8 @@ public class TDFReader {
 				try {
 					windowFunctions.add(WindowFunction.valueOf(wfName));
 				} catch (Exception e) {
-					log.log(Level.SEVERE, "Error creating window function: "
-							+ wfName, e);
+					log.log(Level.SEVERE,
+							"Error creating window function: " + wfName, e);
 				}
 			}
 		} else {
@@ -163,8 +160,8 @@ public class TDFReader {
 		// Track type
 		try {
 			// trackType = TrackType.valueOf();
-			System.out.println("TDF TRACK TYPE: "
-					+ StringUtils.readString(byteBuffer));
+			System.out.println(
+					"TDF TRACK TYPE: " + StringUtils.readString(byteBuffer));
 
 		} catch (Exception e) {
 			// trackType = TrackType.OTHER;
@@ -205,7 +202,7 @@ public class TDFReader {
 
 		int nDatasets = byteBuffer.getInt();
 
-		datasetIndex = new LinkedHashMap(nDatasets);
+		datasetIndex = new LinkedHashMap<>(nDatasets);
 		for (int i = 0; i < nDatasets; i++) {
 			String name = StringUtils.readString(byteBuffer);
 			long fPosition = byteBuffer.getLong();
@@ -214,7 +211,7 @@ public class TDFReader {
 		}
 
 		int nGroups = byteBuffer.getInt();
-		groupIndex = new LinkedHashMap(nGroups);
+		groupIndex = new LinkedHashMap<>(nGroups);
 		for (int i = 0; i < nGroups; i++) {
 			String name = StringUtils.readString(byteBuffer);
 			long fPosition = byteBuffer.getLong();
@@ -336,8 +333,7 @@ public class TDFReader {
 			// byte[] buffer = new byte[nBytes];
 			// readFully(buffer);
 			byte[] buffer = readBytes(position, nBytes);
-			
-			
+
 			if (compressed) {
 				buffer = CompressionUtils.decompress(buffer);
 

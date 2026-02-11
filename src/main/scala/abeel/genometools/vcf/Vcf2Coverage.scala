@@ -22,9 +22,9 @@ object Vcf2Coverage extends Main {
   override def main(args: Array[String]) :Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar vcf2coverage") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(vcfFile = x) } text ("VCF file")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("Output name.")
-      opt[Int]('w', "window") action { (x, c) => c.copy(window = x) } text ("Window size")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(vcfFile = x) }.text ("VCF file")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(outputFile = x) }.text ("Output name.")
+      opt[Int]('w', "window").action { (x, c) => c.copy(window = x) }.text ("Window size")
     }
 
     parser.parse(args, Config()) map { config =>

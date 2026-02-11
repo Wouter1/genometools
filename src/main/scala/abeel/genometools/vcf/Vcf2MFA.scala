@@ -57,7 +57,7 @@ object Vcf2MFA extends Main {
         val refMap = getPositions(vcfList) // Map with ref. positions and bases
         println("Writing mfa-file...")
         val p = new PrintWriter(config.output)
-        val pw = new PrintWriter(config.output + ".log")
+        val pw = new PrintWriter(""+config.output + ".log")
         pw.println(generatorInfo())
         pw.println("Number of VCF files: " + vcfList.size)
         pw.println("Positions in file: " + refMap.size)
