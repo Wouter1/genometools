@@ -31,13 +31,13 @@ object FlagSuspectSamples extends Main {
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar pelican.jar drugs") {
-      opt[File]("ambiguity") required () action { (x, c) => c.copy(ambiguous = x) } text ("Input file with ambiguity information per sample.")
-      opt[File]("pilon-metrics") required () action { (x, c) => c.copy(pilonMetrics = x) } text ("Input file with pilon metrics.")
-      opt[File]("contamination") required () action { (x, c) => c.copy(contamination = x) } text ("Input file with contamination information.")
-      opt[File]("cpt-table") required () action { (x, c) => c.copy(cptTable = x) } text ("Input file with CPT table.")
-      opt[Double]("threshold") action { (x, c) => c.copy(threshold = x) } text ("Score threshold to exclude samples. Default = 1 ")
-      opt[String]('o', "output") action { (x, c) => c.copy(outputPrefix = x) } text ("Output prefix ")
-      opt[String]('m', " manhattan") required () action { (x, c) => c.copy(manhattan = x) } text ("Manhattan identifiers as a comma separated list")
+      opt[File]("ambiguity"). required (). action { (x, c) => c.copy(ambiguous = x) }. text ("Input file with ambiguity information per sample.")
+      opt[File]("pilon-metrics"). required (). action { (x, c) => c.copy(pilonMetrics = x) }. text ("Input file with pilon metrics.")
+      opt[File]("contamination"). required () .action { (x, c) => c.copy(contamination = x) }. text ("Input file with contamination information.")
+      opt[File]("cpt-table"). required (). action { (x, c) => c.copy(cptTable = x) }. text ("Input file with CPT table.")
+      opt[Double]("threshold"). action { (x, c) => c.copy(threshold = x) }. text ("Score threshold to exclude samples. Default = 1 ")
+      opt[String]('o', "output"). action { (x, c) => c.copy(outputPrefix = x) }. text ("Output prefix ")
+      opt[String]('m', " manhattan"). required (). action { (x, c) => c.copy(manhattan = x) }. text ("Manhattan identifiers as a comma separated list")
 
     }
 
@@ -68,10 +68,10 @@ object FlagSuspectSamples extends Main {
         pw2.println("# WARNING: missing ambiguity rate for key " + key)
         pw3.println("# WARNING: missing ambiguity rate for key " + key)
       }
-      val ambArr = if (amb.contains(key)) amb.getOrElse(key, null).split("\t").map(_.toDouble) else null
+      val ambArr = if (amb.contains(key)) amb.getOrElse(key, null).split("\t").toList.map(_.toDouble) else null
       val ambRate = if (ambArr == null || ambArr(7) < 25) 0 else ambArr(0) / ambArr(7)
 
-      val lisArr = cpt.getOrElse(key, null).split("\t").map(_.toDouble)
+      val lisArr = cpt.getOrElse(key, null).split("\t").toList.map(_.toDouble)
       val liRate = if (lisArr(0) < 25) 0 else lisArr(5) / lisArr(0)
 
       val lsRate = if (lisArr(0) < 25) 0 else lisArr(3) / lisArr(0)
@@ -94,9 +94,9 @@ object FlagSuspectSamples extends Main {
       (key, ambRate, liRate, lsRate, covV, contaminant, suspicionScore)
     }
 
-    pw.println(generatorInfo)
-    pw2.println(generatorInfo)
-    pw3.println(generatorInfo)
+    pw.println(generatorInfo())
+    pw2.println(generatorInfo())
+    pw3.println(generatorInfo())
     pw.println("#")
     pw.println("## Configuration: ")
     pw.println("# ambiguous = " + config.ambiguous)

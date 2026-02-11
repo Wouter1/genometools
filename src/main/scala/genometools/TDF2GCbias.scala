@@ -17,6 +17,7 @@ import atk.io.NixWriter
 import java.util.logging.Logger
 import java.util.logging.Level
 import atk.util.LoggingTrait
+import org.apache.commons.collections4.IteratorUtils
 
 object TDF2GCbias extends Main {
 
@@ -34,10 +35,10 @@ object TDF2GCbias extends Main {
  setDebugLevel(Level.WARNING)
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar tdf2gcbias") {
       val default = new Config()
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("Input TDF file. ")
-      opt[File]('r', "reference") required () action { (x, c) => c.copy(reference = x) } text ("Input fasta file. ")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(output = x) } text ("File where you want the output to be written")
-      opt[Int]('w', "window") action { (x, c) => c.copy(window = x) } text ("Window length, default = " + default.window)
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(input = x) }.text ("Input TDF file. ")
+      opt[File]('r', "reference").required (). action { (x, c) => c.copy(reference = x) }.text ("Input fasta file. ")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(output = x) }.text ("File where you want the output to be written")
+      opt[Int]('w', "window").action { (x, c) => c.copy(window = x) }. text ("Window length, default = " + default.window)
 
     }
     parser.parse(args, Config()) map { config =>
@@ -59,21 +60,21 @@ object TDF2GCbias extends Main {
 
     pw.println("# GC-content per window of "+config.window+" nt")
     pw.println("#reference\tcoverage")
-    for (entry <- ref) {
+    for (entry <- ref.asScala) {
       pw.println("#ENTRY = "+entry.getID)
-      println(entry.getID + "\t" + entry.iterator().toList)
+      println(entry.getID + "\t" + entry)
       val r = entry
       val tEntry = tdf.getEntry(entry.getID)
 
-      val t = (tEntry.get(tEntry.iterator().toList(0))).asInstanceOf[TDFData]
+      val t = (tEntry.get(tEntry.iterator().next)).asInstanceOf[TDFData]
       for (i <- 0 until r.getMaximumLength / config.window) {
         val seq = r.sequence().subsequence(i * config.window, (i + 1) * config.window).stringRepresentation()
         val nt = seq.toUpperCase().groupBy(identity).mapValues { _.size }
         val gc = nt.getOrElse('C', 0) + nt.getOrElse('G', 0)
         val at = nt.getOrElse('A', 0) + nt.getOrElse('T', 0)
 
-        val cov = t.get(i * config.window, (i + 1) * config.window).toList
-        val covMap = cov.map { pile => (pile.start() -> pile.end()) -> pile.getTotal }
+        val cov = IteratorUtils.toList(t.get(i * config.window, (i + 1) * config.window).iterator)
+        val covMap = cov.asScala.map { pile => (pile.start() -> pile.end()) -> pile.getTotal }
         val singles=covMap.filter(p=>p._1._1+1==p._1._2).filter(p=>p._1._1>=i * config.window && p._1._1<(i + 1) * config.window)
         val singleSum=singles.map(_._2).sum
 //        println(covMap.size+"\t"+singles.size)

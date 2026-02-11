@@ -13,8 +13,8 @@ object ExtractDuplications extends Main {
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar extract-duplications") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("Input file with ale identifiers and pilon file locations, i.e. ale.id.txt")
-      opt[File]('o', "output") action { (x, c) => c.copy(output = x) } text ("Output file. Default input parent directory + duplications.txt")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(input = x) }.text ("Input file with ale identifiers and pilon file locations, i.e. ale.id.txt")
+      opt[File]('o', "output").action { (x, c) => c.copy(output = x) }.text ("Output file. Default input parent directory + duplications.txt")
 
     }
 
@@ -32,7 +32,7 @@ object ExtractDuplications extends Main {
     })
 
     val pw = new PrintWriter(if (config.output != null) config.output else new File(config.input.getAbsoluteFile().getParent() + "/duplications.txt"))
-    pw.println(generatorInfo)
+    pw.println(generatorInfo())
     pw.println(mapping.map(f => f._1 + "\t" + f._2.mkString(",")).mkString("\n"))
     pw.close
   }

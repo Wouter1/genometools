@@ -49,7 +49,7 @@ object GFF2GTF extends Main{
 		val e = new FileSource(args(0)).read();
 		val gtf = new FileOutputStream(args(0) + ".gtf");
 	
-		for (entry <- e) {
+		for (entry <- e.asScala) {
 			System.out.println(entry);
 			System.out.println(entry.sequence().size());
 			new GTFParser().write(gtf, entry);

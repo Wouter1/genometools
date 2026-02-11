@@ -19,8 +19,8 @@ object MAFIndex extends Main {
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar mafix") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input MAF file. ")
-      opt[File]('o', "output") action { (x, c) => c.copy(outputFile = x) } text ("File where you want the output to be written, default is <input>.bgz and <input>.bgz.mfi")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(inputFile = x) }.text ("Input MAF file. ")
+      opt[File]('o', "output").action { (x, c) => c.copy(outputFile = x) }.text ("File where you want the output to be written, default is <input>.bgz and <input>.bgz.mfi")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -34,8 +34,8 @@ object MAFIndex extends Main {
 
   def processFile(config: Config): Unit = {
     val input = config.inputFile
-    val output = if (config.outputFile != null) config.outputFile else new File(config.inputFile + ".bgz")
-    val idx = new File(output + ".mfi")
+    val output = if (config.outputFile != null) config.outputFile else new File(""+config.inputFile + ".bgz")
+    val idx = new File(""+output + ".mfi")
     MafixFactory.generateBlockZippedFile(new FileInputStream(input), output);
     MafixFactory.generateIndex(new Locator(output).stream(), idx);
   }

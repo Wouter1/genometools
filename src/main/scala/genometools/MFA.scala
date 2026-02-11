@@ -17,9 +17,9 @@ object MFA extends Main {
   override def main(args: Array[String]): Unit = {
 
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar sort_mfa") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(inputFile = x) } text ("Input mfa formatted file.")
-      opt[File]('o', "output") required () action { (x, c) => c.copy(outputFile = x) } text ("Output mfa formatted file with entries sorted in alphanumerci order.")
-      opt[Int]('n', "n") action { (x, c) => c.copy(n = x) } text ("Characters per line in mfa")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(inputFile = x) }.text ("Input mfa formatted file.")
+      opt[File]('o', "output").required ().action { (x, c) => c.copy(outputFile = x) }.text ("Output mfa formatted file with entries sorted in alphanumerci order.")
+      opt[Int]('n', "n").action { (x, c) => c.copy(n = x) }.text ("Characters per line in mfa")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -31,7 +31,7 @@ object MFA extends Main {
       
       val es = new FileSource(config.inputFile).read()
 
-      val map = es.map{e =>
+      val map = es.asScala.map{e =>
         
         (e.getID() -> e.sequence().stringRepresentation())}.toMap
 

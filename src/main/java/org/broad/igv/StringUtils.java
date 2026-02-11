@@ -25,78 +25,74 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: jrobinso
- * Date: Oct 30, 2009
- * Time: 1:51:36 AM
+ * Created by IntelliJ IDEA. User: jrobinso Date: Oct 30, 2009 Time: 1:51:36 AM
  * To change this template use File | Settings | File Templates.
  */
 public class StringUtils {
 
+	public static List<String> breakQuotedString(String string,
+			char splitToken) {
 
-    public static List<String> breakQuotedString(String string, char splitToken) {
+		ArrayList<String> strings = new ArrayList();
+		if (string.length() == 0) {
+			return strings;
+		}
 
-        ArrayList<String> strings = new ArrayList();
-        if (string.length() == 0) {
-            return strings;
-        }
+		char[] characters = string.toCharArray();
+		char c = characters[0];
 
-        char[] characters = string.toCharArray();
-        char c = characters[0];
+		boolean isQuoted = false;
+		StringBuffer buff = new StringBuffer(100);
+		for (int i = 0; i < characters.length; i++) {
+			c = characters[i];
+			if (isQuoted) {
+				if (c == '"') {
+					isQuoted = false;
+				}
+				buff.append(c);
+			} else if (c == '"') {
+				isQuoted = true;
+				buff.append(c);
+			} else {
+				if (c == splitToken) {
+					strings.add(buff.toString().trim());
+					buff.setLength(0);
+				} else {
+					buff.append(c);
+				}
+			}
+		}
+		if (buff.length() > 0) {
+			strings.add(buff.toString().trim());
+		}
+		return strings;
 
-        boolean isQuoted = false;
-        StringBuffer buff = new StringBuffer(100);
-        for (int i = 0; i < characters.length; i++) {
-            c = characters[i];
-            if (isQuoted) {
-                if (c == '"') {
-                    isQuoted = false;
-                }
-                buff.append(c);
-            } else if (c == '"') {
-                isQuoted = true;
-                buff.append(c);
-            } else {
-                if (c == splitToken) {
-                    strings.add(buff.toString().trim());
-                    buff.setLength(0);
-                } else {
-                    buff.append(c);
-                }
-            }
-        }
-        if (buff.length() > 0) {
-            strings.add(buff.toString().trim());
-        }
-        return strings;
+	}
 
-    }
+	public static short genoToShort(String genotype) {
+		byte[] bytes = genotype.getBytes();
+		return (short) ((bytes[0] & 0xff) << 8 | (bytes[1] & 0xff));
+	}
 
+	public static String readString(ByteBuffer byteBuffer) throws IOException {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		byte b = -1;
+		while ((b = byteBuffer.get()) != 0) {
+			bytes.write(b);
+		}
+		return new String(bytes.toByteArray());
+	}
 
-    public static short genoToShort(String genotype) {
-        byte[] bytes = genotype.getBytes();
-        return (short) ((bytes[0] & 0xff) << 8 | (bytes[1] & 0xff));
-    }
-    
-    public static String readString(ByteBuffer byteBuffer) throws IOException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        byte b = -1;
-        while ((b = byteBuffer.get()) != 0) {
-            bytes.write(b);
-        }
-        return new String(bytes.toByteArray());
-    }
+	public static void main(String[] args) {
 
-    public static void main(String[] args) {
+		String genotype = "AC";
+		short genoShort = genoToShort(genotype);
 
-        String genotype = "AC";
-        short genoShort = genoToShort(genotype);
+		char allel1 = (char) ((genoShort >>> 8) & 0xFF);
+		char allel2 = (char) ((genoShort >>> 0) & 0xFF);
 
-        char allel1 = (char) ((genoShort >>> 8) & 0xFF);
-        char allel2 = (char) ((genoShort >>> 0) & 0xFF);
+		System.out.println("Allele1: " + allel1);
+		System.out.println("Allele2: " + allel2);
 
-        System.out.println("Allele1: " + allel1);
-        System.out.println("Allele2: " + allel2);
-
-    }
+	}
 }

@@ -29,11 +29,11 @@ object LSP2genes extends Main {
 
  override def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar variant2gene") {
-      opt[String]('o', "output") required() action { (x, c) => c.copy(output = x) } text ("Output prefix")
-      opt[File]("vcf") required() action { (x, c) => c.copy(vcfDirectory= x) } text ("Directory with all VCF files. Need to end with '.annotated.vcf'")
-      opt[File]("gff") required() action { (x, c) => c.copy(gff= x) } text ("File with annotations in GFF format")
-      opt[String]("type") action{(x,c)=>c.copy(typ=x)}text("Type (third column in gff) of feature to use, default=gene")
-      opt[String]("id") action{(x,c)=>c.copy(id=x)}text("Identifier to use for display (last GFF column), default=ID")
+      opt[String]('o', "output"). required(). action { (x, c) => c.copy(output = x) }. text ("Output prefix")
+      opt[File]("vcf") required(). action { (x, c) => c.copy(vcfDirectory= x) }. text ("Directory with all VCF files. Need to end with '.annotated.vcf'")
+      opt[File]("gff") required(). action { (x, c) => c.copy(gff= x) }. text ("File with annotations in GFF format")
+      opt[String]("type"). action{(x,c)=>c.copy(typ=x)}.text("Type (third column in gff) of feature to use, default=gene")
+      opt[String]("id"). action{(x,c)=>c.copy(id=x)}.text("Identifier to use for display (last GFF column), default=ID")
       
       opt[File]('i',"input")required() action { (x, c) => c.copy(includList= x) } text ("File with list of G-numbers to include")
       

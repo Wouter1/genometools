@@ -55,7 +55,7 @@ object GBK2GFF extends Main{
 		val e = new FileSource(args(0)).read();
 		val gff = new FileOutputStream(args(0) + ".gff");
 		val fasta = new FileOutputStream(args(0) + ".fa");
-		for (entry <- e) {
+		for (entry <- e.asScala) {
 			System.out.println(entry);
 			System.out.println(entry.sequence().size());
 			Parser.GFF3.write(gff, entry);

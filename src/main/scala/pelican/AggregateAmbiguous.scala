@@ -17,8 +17,8 @@ object AggregateAmbiguous extends Main {
   
   override def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("java -jar genometools.jar ambiguous") {
-      opt[File]('i', "input") required () action { (x, c) => c.copy(input = x) } text ("Folder with VCF files to scan") //, { v: String => config.spacerFile = v })
-      opt[String]('o', "output") action { (x, c) => c.copy(outputPrefix = x) } text ("Output prefix")
+      opt[File]('i', "input").required ().action { (x, c) => c.copy(input = x) }.text ("Folder with VCF files to scan") //, { v: String => config.spacerFile = v })
+      opt[String]('o', "output").action { (x, c) => c.copy(outputPrefix = x) }.text ("Output prefix")
 
     }
     parser.parse(args, Config()) map { config =>
@@ -35,7 +35,7 @@ object AggregateAmbiguous extends Main {
     val pw = new PrintWriter(config.outputPrefix + ".summary.txt")
     val pw2 = new PrintWriter(config.outputPrefix + ".perSample.txt")
     val order = List("Amb", "Amb;LowCov", "Del", "Del;Amb", "Del;Amb;LowCov", "Del;LowCov", "LowCov", "PASS")
-    pw.println(generatorInfo)
+    pw.println(generatorInfo())
     //    pw.println("# List of files: ")
     //    pw.println("# " + gs.mkString("\n# "))
     val fmArray = Array.ofDim[CountMap[String]](4411709 + 1)
@@ -44,18 +44,20 @@ object AggregateAmbiguous extends Main {
     pw.println("$$\t" + order.mkString("\t") + "\tREFCALL")
     pw2.println("$$\t" + order.mkString("\t"))
     val gs=config.input.listFiles(new PatternFileFilter(defaultPattern))
-    for (g <- gs){
+    for (g <- gs.toList){
      
       val number = g.toString;
        println("Processing: " + g)
-      val vcf = config.input+"/" + number + ".annotated.vcf"
+      val vcf = ""+config.input+"/" + number + ".annotated.vcf"
       if (new File(vcf).exists) {
         val sizeMap:CountMap[String]=new CountMap[String]
         for(line<-tLinesIterator(vcf).map(new VCFLine(_).filter)){
           sizeMap.count(line)
         }
         
-        pw2.println(number + "\t" + order.map(sizeMap.getOrElse(_, 0)).mkString("\t"))
+        pw2.println(number + "\t" + 
+        	order.map ((k:String) => { val v:Integer=sizeMap.get(k); if (v!=null) v else 0 })
+        		.mkString("\t"))
         for(line<-tLinesIterator(vcf)){
           val l = new VCFLine(line)
           if (fmArray(l.pos) == null)
@@ -74,23 +76,24 @@ object AggregateAmbiguous extends Main {
     var count = 0
     for (i <- 1 until fmArray.length) {
       if (fmArray(i) != null) {
-        val values = order.map(f => fmArray(i).getOrElse(f, 0).toString.toInt)
+        val values = order.map((f:String) => {val v=fmArray(i).get(f); if (v!=null) v else 0 }.toString.toInt)
 
-        pw.println(i + "\t" + order.map(f => fmArray(i).getOrElse(f, 0)).mkString("\t") + "\t" + (gs.size - values.sum))
+        pw.println(i + "\t" + order.map((f:String) => {val v= fmArray(i).get(f); if (v!=null) v else 0 })
+        	.mkString("\t") + "\t" + (gs.size - values.sum))
         count += 1
       }
     }
     pw.println("# " + count + " positions")
     pw.println("# summary " + fmArray(0))
-    val summarizePerType = fmArray(0).keySet().map(key => {
+    val summarizePerType = fmArray(0).keySet().asScala.map(key => {
       val arr = fmArray.zipWithIndex.drop(1).filter(p => p._1 != null && p._1.keySet().contains(key))
       val pwx = new PrintWriter(config.outputPrefix + "." + key.replace(';', '_') + ".txt")
-      pwx.println(generatorInfo)
+      pwx.println(generatorInfo())
       pwx.println("#####")
       pwx.println("## Summary for " + key)
       pwx.println("#####")
       pwx.println(arr.map(f => {
-        f._2 + "\t" + f._1.getOrElse(key, -1)
+        f._2 + "\t" + { val v=f._1.get(key); if (v!=null) v else -1 }
       }).mkString("\n"))
       pwx.close
       key -> arr.size

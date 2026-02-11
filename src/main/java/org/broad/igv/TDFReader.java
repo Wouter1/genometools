@@ -46,7 +46,7 @@ public class TDFReader {
 	public static final int GZIP_FLAG = 0x1;
 
 	// Cache to insure there is only 1 reader per file
-	static Map<String, TDFReader> readerCache = new HashMap();
+	static Map<String, TDFReader> readerCache = new HashMap<>();
 
 	private SeekableStream seekableStream = null;
 	private int version;
@@ -119,7 +119,7 @@ public class TDFReader {
 		ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
 		byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
-		int magicNumber = byteBuffer.getInt();
+		// int magicNumber = byteBuffer.getInt();
 
 		byte[] magicBytes = new byte[4];
 		System.arraycopy(buffer, 0, magicBytes, 0, 4);
@@ -127,6 +127,7 @@ public class TDFReader {
 
 		if (!(magicString.startsWith("TDF")
 				|| !magicString.startsWith("IBF"))) {
+			// BUG? This does nothing.
 			String msg = "Error reading header: bad magic number.";
 			// throw new DataLoadException(msg, locator.getPath());
 		}
