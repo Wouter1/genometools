@@ -30,4 +30,6 @@ genometools-development.zip
 /.project
 /.settings/
 /.pydevproject
-/stats
+/stats.png
+/stats.txt
+/histo
