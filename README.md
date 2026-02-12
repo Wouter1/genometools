@@ -55,7 +55,6 @@ Start by using:`java -jar genometools-<version>.jar`
 |    vcf2matrix   *      |Tool to convert a set of VCF files to a mutation matrix |
 |    vcf2mfa             |There is no description available for this tool|
 |    vcfstats            |There is no description available for this tool|
-```
     
 > [!WARNING]
 > All * marked tools are still in development and is not for general use.
