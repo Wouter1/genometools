@@ -21,13 +21,14 @@ import java.io.File
 import java.util.Properties
 import org.broad.igv.WindowFunction
 import java.util.ArrayList
-import net.sf.samtools.SAMFileReader
-import net.sf.samtools.SAMFileReader.ValidationStringency
+import htsjdk.samtools.SamReader
+import htsjdk.samtools.SamReaderFactory
+import htsjdk.samtools.ValidationStringency
 import atk.util.Tool
 import scala.jdk.CollectionConverters._
 import abeel.genometools.Main
 import java.util.Arrays
-import net.sf.samtools.SAMSequenceRecord
+import htsjdk.samtools.SAMSequenceRecord
 
 /**
  * Program to create tdf files from bam files.
@@ -106,13 +107,16 @@ object ConvertBAM2TDF extends Tool with Main{
       wfs.add(wf)
     }
 
-    SAMFileReader.setDefaultValidationStringency(ValidationStringency.SILENT);
+    //SAMFileReader.setDefaultValidationStringency(ValidationStringency.SILENT);
     // TDFTools igvTools = new TDFTools();
     // igvTools.doCount(ifile, ""+ifile + ".tdf", wfs);
     val ofile = ""+ifile + ".tdf";
 
     System.out.println("Computing coverage.  File = " + ifile);
-    val sfr = new SAMFileReader(ifile);
+    
+    val sfr = SamReaderFactory.makeDefault()
+        .validationStringency(ValidationStringency.SILENT)
+        .open(ifile)
     val dict = sfr.getFileHeader().getSequenceDictionary();
     var max = 0;
     for (ssr:SAMSequenceRecord <- dict.getSequences()) {

@@ -1,12 +1,10 @@
 package abeel.genometools.kmer
 
 import java.io.File
-import net.sf.samtools.SAMFileReader
 import atk.compbio.DNAString
 import scala.jdk.CollectionConverters._
 import java.io.PrintWriter
 import abeel.genometools.Main
-import net.sf.samtools.SAMFileReader.ValidationStringency
 import atk.util.TimeInterval
 import atk.compbio.DNAHash
 

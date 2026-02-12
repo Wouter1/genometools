@@ -2,8 +2,9 @@ package abeel.genometools.bam
 
 import abeel.genometools.Main
 import java.io.File
-import net.sf.samtools.SAMFileReader
-import net.sf.samtools.SAMFileReader.ValidationStringency
+import htsjdk.samtools.SamReader
+import htsjdk.samtools.SamReaderFactory
+import htsjdk.samtools.ValidationStringency
 import atk.compbio.DNAHash
 import scala.jdk.CollectionConverters._
 import atk.io.NixWriter
@@ -49,8 +50,9 @@ object Bam2GC extends Main {
 
   private def processFile(config: Config):Unit =  {
 
-    val sfr = new SAMFileReader(config.inputFile)
-    sfr.setValidationStringency(ValidationStringency.LENIENT)
+    val sfr = SamReaderFactory.makeDefault()
+        .validationStringency(ValidationStringency.LENIENT)
+        .open(config.inputFile)
 
     val map = scala.collection.mutable.Map[Long, Int]().withDefaultValue(0)
     var discard = 0

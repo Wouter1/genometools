@@ -4,10 +4,10 @@ import java.util.Properties
 import java.io.File
 import atk.util.Tool
 import java.io.PrintWriter
-import net.sf.samtools.SAMFileReader
 import scala.jdk.CollectionConverters._
 import abeel.genometools.Main
-
+import htsjdk.samtools.SamReader
+import htsjdk.samtools.SamReaderFactory
 
 object Bam2ReadNames extends Tool with Main {
 
@@ -56,8 +56,7 @@ object Bam2ReadNames extends Tool with Main {
   private def processFile(config: Config): Unit = {
 
     
-
-    val sam = new SAMFileReader(config.inputFile)
+    val sam = SamReaderFactory.makeDefault().open(config.inputFile)
 
     val pw = new PrintWriter(config.outputFile)
 

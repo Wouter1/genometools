@@ -1,12 +1,10 @@
 package abeel.genometools.tdf
 
-import net.sf.samtools.SAMFileReader
 import java.io.PrintWriter
 import java.io.File
 import abeel.genometools.Main
 import java.time.LocalDateTime
 import atk.compbio.DNAHash
-import net.sf.samtools.SAMFileReader.ValidationStringency
 import atk.util.TimeInterval
 import scala.jdk.CollectionConverters._
 import net.sf.jannot.tdf.TDFDataSource

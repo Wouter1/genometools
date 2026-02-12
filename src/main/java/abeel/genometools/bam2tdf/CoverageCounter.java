@@ -30,13 +30,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-
-import net.sf.samtools.AlignmentBlock;
-import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMRecordIterator;
-import net.sf.samtools.SAMSequenceDictionary;
-import net.sf.samtools.SAMSequenceRecord;
+import htsjdk.samtools.AlignmentBlock;
+import htsjdk.samtools.SAMRecord;
+import htsjdk.samtools.SAMRecordIterator;
+import htsjdk.samtools.SAMSequenceDictionary;
+import htsjdk.samtools.SAMSequenceRecord;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
 
 /**
  *   TODO -- normalize option
@@ -65,67 +65,73 @@ class CoverageCounter {
 	private int totalCount = 0;
 
 	private SAMSequenceDictionary genome;
-	private double mappingQuality=-1;
+	private double mappingQuality = -1;
 
-	CoverageCounter(String alignmentFile, Preprocessor consumer, File wigFile, SAMSequenceDictionary genome2,double mappingQuality) {
+	CoverageCounter(String alignmentFile, Preprocessor consumer, File wigFile,
+			SAMSequenceDictionary genome2, double mappingQuality) {
 		this.alignmentFile = alignmentFile;
 		this.consumer = consumer;
 		this.genome = genome2;
 		buffer = new float[4];
-		this.mappingQuality=mappingQuality;
+		this.mappingQuality = mappingQuality;
 	}
 
 	private boolean passFilter(SAMRecord alignment) {
-		return !alignment.getReadUnmappedFlag() && !alignment.getDuplicateReadFlag() && alignment.getMappingQuality()>mappingQuality;
+		return !alignment.getReadUnmappedFlag()
+				&& !alignment.getDuplicateReadFlag()
+				&& alignment.getMappingQuality() > mappingQuality;
 	}
 
 	void parse() throws IOException, URISyntaxException {
 
-	
-		SAMFileReader sfr = new SAMFileReader(new File(alignmentFile));
+		SamReader sfr = SamReaderFactory.makeDefault()
+				.open(new File(alignmentFile));
 
 		String lastChr = null;
 		ReadCounter counter = null;
 
 //		for (SAMSequenceRecord e : genome.getSequences()) {
-			SAMRecordIterator it = sfr.iterator();//sfr.queryOverlapping(e.getSequenceName(), 1, e.getSequenceLength());
-			while (it.hasNext()) {
-				SAMRecord alignment = it.next();
-				if (passFilter(alignment)) {
+		SAMRecordIterator it = sfr.iterator();// sfr.queryOverlapping(e.getSequenceName(),
+												// 1, e.getSequenceLength());
+		while (it.hasNext()) {
+			SAMRecord alignment = it.next();
+			if (passFilter(alignment)) {
 
-					totalCount++;
+				totalCount++;
 
-					String alignmentChr = alignment.getReferenceName();//e.getSequenceName();
+				String alignmentChr = alignment.getReferenceName();// e.getSequenceName();
 
-					if (alignmentChr.equals(lastChr)) {
-						if (counter != null) {
-							counter.closeBucketsBefore(alignment.getAlignmentStart());
-						}
-					} else {
-						if (counter != null) {
-							counter.closeBucketsBefore(Integer.MAX_VALUE);
-						}
-						counter = new ReadCounter(alignmentChr);
-						lastChr = alignmentChr;
+				if (alignmentChr.equals(lastChr)) {
+					if (counter != null) {
+						counter.closeBucketsBefore(
+								alignment.getAlignmentStart());
 					}
+				} else {
+					if (counter != null) {
+						counter.closeBucketsBefore(Integer.MAX_VALUE);
+					}
+					counter = new ReadCounter(alignmentChr);
+					lastChr = alignmentChr;
+				}
 
-					AlignmentBlock[] blocks = alignment.getAlignmentBlocks().toArray(new AlignmentBlock[0]);
-					if (blocks != null) {
-						for (AlignmentBlock block : blocks) {
+				AlignmentBlock[] blocks = alignment.getAlignmentBlocks()
+						.toArray(new AlignmentBlock[0]);
+				if (blocks != null) {
+					for (AlignmentBlock block : blocks) {
 
-							//TODO is this correct?
-							int adjustedStart = block.getReferenceStart();// block.getStart();
-							int adjustedEnd = block.getReferenceStart() + block.getLength();// block.getEnd();
-						
-							count(adjustedStart,adjustedEnd,counter,alignment);
+						// TODO is this correct?
+						int adjustedStart = block.getReferenceStart();// block.getStart();
+						int adjustedEnd = block.getReferenceStart()
+								+ block.getLength();// block.getEnd();
 
-							
-						}
-					} else {
-						int adjustedStart = alignment.getAlignmentStart();
-						int adjustedEnd = alignment.getAlignmentEnd();
-					
-						count(adjustedStart,adjustedEnd,counter,alignment);
+						count(adjustedStart, adjustedEnd, counter, alignment);
+
+					}
+				} else {
+					int adjustedStart = alignment.getAlignmentStart();
+					int adjustedEnd = alignment.getAlignmentEnd();
+
+					count(adjustedStart, adjustedEnd, counter, alignment);
 //						for (int pos = adjustedStart; pos < adjustedEnd; pos++) {
 //							if (alignment.getFirstOfPairFlag()) {
 //								if (!alignment.getReadNegativeStrandFlag())
@@ -139,13 +145,11 @@ class CoverageCounter {
 //									counter.incrementCount(pos,ReadType.SECONDREADREVERSEMAP);
 //							}
 //						}
-					}
 				}
-
-				
-
 			}
-			it.close();
+
+		}
+		it.close();
 //		}
 
 		if (counter != null) {
@@ -153,32 +157,28 @@ class CoverageCounter {
 		}
 
 		consumer.setAttribute("totalCount", String.valueOf(totalCount));
-		
 
 	}
 
-	
+	private void count(int adjustedStart, int adjustedEnd, ReadCounter counter,
+			SAMRecord alignment) {
 
-	private void count(int adjustedStart, int adjustedEnd, ReadCounter counter, SAMRecord alignment) {
-		
-		
 		for (int pos = adjustedStart; pos < adjustedEnd; pos++) {
-			if (!alignment.getReadPairedFlag()||alignment.getFirstOfPairFlag()) {
+			if (!alignment.getReadPairedFlag()
+					|| alignment.getFirstOfPairFlag()) {
 				if (!alignment.getReadNegativeStrandFlag())
-					counter.incrementCount(pos,ReadType.FIRSTREADFORWARDMAP);
+					counter.incrementCount(pos, ReadType.FIRSTREADFORWARDMAP);
 				else
-					counter.incrementCount(pos,ReadType.FIRSTREADREVERSEMAP);
-			}else{
+					counter.incrementCount(pos, ReadType.FIRSTREADREVERSEMAP);
+			} else {
 				if (!alignment.getReadNegativeStrandFlag())
-					counter.incrementCount(pos,ReadType.SECONDREADFORWARDMAP);
+					counter.incrementCount(pos, ReadType.SECONDREADFORWARDMAP);
 				else
-					counter.incrementCount(pos,ReadType.SECONDREADREVERSEMAP);
+					counter.incrementCount(pos, ReadType.SECONDREADREVERSEMAP);
 			}
 		}
-		
+
 	}
-
-
 
 	class ReadCounter {
 
@@ -197,12 +197,12 @@ class CoverageCounter {
 			counts.get(bucket).increment(rt);
 		}
 
-	
 		void closeBucketsBefore(int position) {
 			List<Integer> bucketsToClose = new ArrayList<Integer>();
 
 			Integer bucket = position;
-			for (Map.Entry<Integer, PositionCounter> entry : counts.entrySet()) {
+			for (Map.Entry<Integer, PositionCounter> entry : counts
+					.entrySet()) {
 				if (entry.getKey() < bucket) {
 
 					// Divide total count by window size. This is the average
@@ -214,17 +214,19 @@ class CoverageCounter {
 					if (genome != null) {
 						SAMSequenceRecord chromosome = genome.getSequence(chr);
 						if (chromosome != null) {
-							bucketEndPosition = Math.min(bucketEndPosition, chromosome.getSequenceLength());
+							bucketEndPosition = Math.min(bucketEndPosition,
+									chromosome.getSequenceLength());
 						}
 					}
 					int bucketSize = bucketEndPosition - bucketStartPosition;
 
 					for (int i = 0; i < ReadType.values().length; i++) {
-						buffer[i] = ((float) entry.getValue().value(ReadType.values()[i])) / bucketSize;
+						buffer[i] = ((float) entry.getValue()
+								.value(ReadType.values()[i])) / bucketSize;
 					}
-					
 
-					consumer.addData(chr, bucketStartPosition, bucketEndPosition, buffer, null);
+					consumer.addData(chr, bucketStartPosition,
+							bucketEndPosition, buffer, null);
 
 					bucketsToClose.add(entry.getKey());
 				}
@@ -233,7 +235,6 @@ class CoverageCounter {
 			for (Integer key : bucketsToClose) {
 				counts.remove(key);
 			}
-			
 
 		}
 	}
@@ -251,7 +252,6 @@ class CoverageCounter {
 			return counterBuffer[rt.ordinal()];
 		}
 
-		
 	}
 
 }

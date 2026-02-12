@@ -3,7 +3,8 @@ package abeel.genometools.bam2fraglendistr
 import java.util.Properties
 import java.io.File
 import atk.util.Tool
-import net.sf.samtools.SAMFileReader
+import htsjdk.samtools.SamReader
+import htsjdk.samtools.SamReaderFactory
 import scala.jdk.CollectionConverters._
 import be.abeel.util.FrequencyMap
 import be.abeel.util.FrequencyMapUtils
@@ -50,7 +51,7 @@ object Bam2FragmentlenDistribution extends Main {
 
   private def processFile(config: Config): Unit =  {
 
-    val sam = new SAMFileReader(config.inputFile)
+    val sam = SamReaderFactory.makeDefault().open(config.inputFile)
 
     val fm = new FrequencyMap
 
