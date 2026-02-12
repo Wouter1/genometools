@@ -76,10 +76,11 @@
   		</dependency>
 
 		<dependency>
-			<groupId>org.scalatest</groupId>
-			<artifactId>scalatest_3</artifactId>
-        	<version>3.2.18</version>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scaladoc_3</artifactId>
+  		    <version>${scala.version}</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -164,12 +165,31 @@
 			          <scalaVersion>${scala.version}</scalaVersion>
 			        </configuration>
 			        <executions>
-			          <execution>
-			            <goals>
-			              <goal>compile</goal>
-	                <goal>testCompile</goal>
-			            </goals>
-			          </execution>
+					   <execution>
+					       <id>scala-compile-first</id>
+					       <phase>process-resources</phase>
+					       <goals>
+					         <goal>add-source</goal>
+					         <goal>compile</goal>
+					       </goals>
+					   </execution>
+					   <execution>
+					       <id>scala-test-compile</id>
+					       <phase>process-test-resources</phase>
+					       <goals>
+					         <goal>testCompile</goal>
+					       </goals>
+					   </execution>
+					   <!-- 
+						scala doc doesn't work https://github.com/davidB/scala-maven-plugin/issues/604'
+                       <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>doc-jar</goal>
+                        </goals>
+                      </execution>
+					   -->
+
 			        </executions>
 		      </plugin>
 		
