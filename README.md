@@ -8,6 +8,9 @@ Latest build is available:
 
 https://artifactory.ewi.tudelft.nl/ui/native/libs-release/be/abeel/genometools/
 
+> [!INFO]
+> Use the jar-with-dependencies.
+
 ## Running
 Start by using:`java -jar genometools-<version>.jar`
 
