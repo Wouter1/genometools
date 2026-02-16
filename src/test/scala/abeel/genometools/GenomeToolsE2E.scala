@@ -8,8 +8,10 @@ import java.io.File
 class GenomeToolsE2E extends AnyFunSuite {
   val DIR = "src/test/resources/"
   val BAM = DIR+"uwgs-rw_L2_FC6218_3.CHROMOSOME_IV.sorted.bam"
-  val CG="histo"
-  val STATS="stats"
+  val FASTA = DIR+"IV.fasta"
+  val CG = "histo"
+  val STATS = "stats"
+  val FSTATS = "fstats"
 
   test("bam2cg") {
     GenomeToolsConsole.main(Array("bam2gc","-i", BAM,"-o",CG))
@@ -28,6 +30,14 @@ class GenomeToolsE2E extends AnyFunSuite {
     assert(image.exists)
     assert(image.length > 20000)
   }
+
+// disabled. bug in atk FastAFile
+//  test("faq2gc") {
+//    GenomeToolsConsole.main(Array("faq2gc","-i", FASTA,"-o",FSTATS))
+//    //val lines = Source.fromFile(FSTATS).mkString
+//    //assert(lines.size > 10)
+//    //assert(lines.contains("read.count=323698")) // whatever that means
+//  }
 
 
 }
