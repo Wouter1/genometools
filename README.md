@@ -23,7 +23,7 @@ Start by using:`java -jar genometools-<version>.jar`
 |    bam2gc              |Tool to calculate GC histogram|
 |    bam2kmer            |Tool to generate subset of kmers and statistics from a BAM file.|
 |    bam2readnames       |There is no description available for this tool|
-|    bam2tdf             |There is no description available for this tool|
+|    bam2tdf             |converts BAM files to TDF (coverage) files. calculates fragment coverage, not physical coverage.|
 |    bamstats            |Tool to calculate basic statistics from a BAM file: fragment length distribution, read lenght distribution, read counts.|
 |    ena-download        |There is no description available for this tool|
 |    extract-duplications|Extract information about large duplications from Pilon runs|
