@@ -14,6 +14,14 @@ https://artifactory.ewi.tudelft.nl/ui/native/libs-release/be/abeel/genometools/
 ## Running
 Start by using:`java -jar genometools-<version>.jar`
 
+Get help using `java -jar genometools-<version>.jar  <option>`
+
+example
+```
+java -jar target/genometools-1.1.0-jar-with-dependencies.jar reducevcf 
+```
+
+
 ### Usage
 
 |option|description|
@@ -43,7 +51,7 @@ Start by using:`java -jar genometools-<version>.jar`
 |    phy2maf             |Tool to convert phylip to multi-fasta file format.|
 |    pilon-metrics       |Program to extract metrics from all Pilon runs|
 |    reducekmer          |Tool to reduce kmer file size by filtering by count.|
-|    reducevcf           |There is no description available for this tool|
+|    reducevcf           |reducevcf is a tool to reduce the size of VCF files. It will remove all lines where the alternative allele matches the reference allele. In most cases this will reduce the VCF to less than 1% of its original size.|
 |    snpmatrix           |Create pairwise SNP distance matrix|
 |    snpmatrix-distribution|Create distribution plot from SNP matrix|
 |    suspicious   *       |Identify samples that should be excluded based on their CPT, ambiguity rate and large insertion rate.|
