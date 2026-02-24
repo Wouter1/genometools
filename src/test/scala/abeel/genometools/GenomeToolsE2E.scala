@@ -12,6 +12,8 @@ class GenomeToolsE2E extends AnyFunSuite {
   val CG = "histo"
   val STATS = "stats"
   val FSTATS = "fstats"
+  val WIG = DIR+"IV.wig"
+  val TDF = "IV.tdf"
 
   test("bam2cg") {
     GenomeToolsConsole.main(Array("bam2gc","-i", BAM,"-o",CG))
@@ -38,6 +40,13 @@ class GenomeToolsE2E extends AnyFunSuite {
 //    //assert(lines.size > 10)
 //    //assert(lines.contains("read.count=323698")) // whatever that means
 //  }
+
+  test("wig2tdf") {
+    GenomeToolsConsole.main(Array("wig2tdf","-i", WIG,"-o",TDF))
+    assert(new File(TDF).exists)
+    assert(new File(TDF).length > 7000)  // 7775 bytes with manual run
+    // it's a binary file, no clue what to do with it from here.
+  }
 
 
 }

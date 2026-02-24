@@ -29,6 +29,7 @@ import abeel.genometools.ena.PrepareENADownload
 import abeel.genometools.vcf.Vcf2MFA
 import abeel.genometools.vcf.Vcf2Coverage
 import abeel.genometools.gfa.FastGFAStatistics
+import abeel.genometools.wig.Wig2Tdf
 import pelican._
 
 trait Main extends Tool {
@@ -60,6 +61,7 @@ object GenomeToolsConsole extends Tool {
     2017/01/13   Added vcf2mfa
     2017/06/12   Added vcf2coverage
     2018/04/10   Integrated code from pelican
+    2026         Added wig2tdf
 
     """
 
@@ -108,7 +110,8 @@ object GenomeToolsConsole extends Tool {
     "variant2gene" -> LSP2genes,
     "merge-projects" -> MergeProjects,
     "extract-duplications" -> ExtractDuplications,
-    "list-tree" -> TreeOrder)
+    "list-tree" -> TreeOrder,
+    "wig2tdf" -> Wig2Tdf )
     
   def main(args: Array[String]): Unit = {
 

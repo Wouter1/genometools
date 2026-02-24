@@ -56,6 +56,7 @@ as described in the [Running](#Running) section below.
 |    vcf2matrix   *      |Tool to convert a set of VCF files to a mutation matrix |
 |    vcf2mfa             |There is no description available for this tool|
 |    vcfstats            |There is no description available for this tool|
+|    wig2tdf             |Tool to convert WIG to TDF| 
     
 > [!WARNING]
 > All * marked tools are still in development and is not for general use.
