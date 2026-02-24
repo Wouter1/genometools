@@ -1,28 +1,21 @@
 # genometools
 
 GenomeTools is a suite of tools to work with genomics data files. 
+It makes samtools functionality available from the commandline through java.
 
-More detailed information for each of these tools can be found in the tool descriptions.
-
-Latest build is available:
+Latest jar-with-dependencies is available:
 
 https://artifactory.ewi.tudelft.nl/ui/native/libs-release/be/abeel/genometools/
 
 > [!TIP]
 > Use the jar-with-dependencies.
 
-## Running
-Start by using:`java -jar genometools-<version>.jar`
 
-Get help using `java -jar genometools-<version>.jar  <option>`
+## Usage
 
-example
-```
-java -jar target/genometools-1.1.0-jar-with-dependencies.jar reducevcf 
-```
-
-
-### Usage
+The tools in the table below are available for use.
+The tool name is given as argument for the tool, 
+as described in the [Running](#Running) section below.
 
 |option|description|
 |---|---|
@@ -66,3 +59,32 @@ java -jar target/genometools-1.1.0-jar-with-dependencies.jar reducevcf
     
 > [!WARNING]
 > All * marked tools are still in development and is not for general use.
+
+
+
+## Running
+Start by using:`java -jar genometools-<version>.jar`
+
+Get help using `java -jar genometools-<version>.jar  <option>`
+
+#### example to get help for reducevcf
+```
+java -jar target/genometools-1.1.0-jar-with-dependencies.jar reducevcf 
+```
+
+#### example to get bam stats
+```
+java -jar genometools-1.1.0-jar-with-dependencies.jar bamstats -i wgs.bam  -o bamstats
+```
+
+which results in a bamstats.png picture anda bamstats.txt file.
+
+#### Example bam2tdf
+You must have both the wgs.bam and wgs.bam.bai to make this work:
+
+```
+java -jar ../genometools-1.1.0-jar-with-dependencies.jar bam2tdf  wgs.bam
+```
+
+The result is a wgs.bam.tdf file.
+
